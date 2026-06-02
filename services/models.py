@@ -12,7 +12,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
-    
+
 
 class Service(models.Model):
     master = models.ForeignKey(
@@ -79,3 +79,35 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order #{self.id} | {self.client.username} -> {self.status}"
+    
+
+
+class Review(models.Model):
+    order = models.OneToOneField(
+        Order, 
+        on_delete=models.CASCADE, 
+        related_name='review',
+        verbose_name="Related Order"
+    )
+    client = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='reviews_written',
+        verbose_name="Client"
+    )
+    master = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='reviews_received',
+        verbose_name="Master"
+    )
+    
+    rating = models.PositiveIntegerField(
+        choices=[(i, f"{i} Stars") for i in range(1, 6)], 
+        verbose_name="Rating Score"
+    )
+    comment = models.TextField(verbose_name="Review Comment")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Reviewed At")
+
+    def __str__(self):
+        return f"Review by {self.client.username} for {self.master.username} ({self.rating}★)"
