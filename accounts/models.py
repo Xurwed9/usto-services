@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+from datetime import timedelta
 
 # Create your models here.
 
@@ -29,3 +31,13 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"Profile of {self.user.username}"
+    
+
+class EmailConfirm(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)
+    def is_expired(self):
+        return timezone.now() > self.created_at + timedelta(minutes=5)
+
+    def __str__(self):
+        return self.user.username
