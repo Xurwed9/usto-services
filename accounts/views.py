@@ -28,3 +28,20 @@ def register(request):
     else:
         return render(request, 'accounts/register.html')
     
+
+
+def login_user(request):
+    
+    if request.method=="POST":
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(request, username=username, password=password)
+        if not user:
+            return render(request, 'accounts/login.html' , {"error": 'Username or password is not corect'})
+        
+        login(request, user)
+        print(user.username)
+        return redirect('/')
+    else:
+        return render(request, 'accounts/login.html')
