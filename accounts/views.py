@@ -43,6 +43,7 @@ def register(request):
         password2 = request.POST.get('password2').strip()
         email = request.POST.get('email').strip()
         phone = request.POST.get('phone').strip()
+        user_role = request.POST.get('role')
         if not username or not email or not password1 or not phone:
             return render(request, 'accounts/register.html', {'error': 'All info are requeired'})
         if password1!=password2:
@@ -54,7 +55,7 @@ def register(request):
         elif User.objects.filter(phone=phone).exists():
             return render(request, 'accounts/register.html', {'error': 'Phone already exists'})
         user = User.objects.create_user(username=username, email=email,
-                                        password=password1, phone=phone)
+                                        password=password1, phone=phone,role=user_role)
         user.is_active=False
         user.save()
         send_confirmation_email(user)
@@ -123,3 +124,6 @@ def confirm_email(request):
     
     else:
         return render(request, 'accounts/confirm_email.html')
+    
+
+
