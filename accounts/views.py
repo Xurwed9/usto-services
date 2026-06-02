@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import EmailConfirm, User, Profile
 from django.contrib.auth import authenticate, login, logout
+from random import randint
 
 # Create your views here.
 
