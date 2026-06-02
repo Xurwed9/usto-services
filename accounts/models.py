@@ -37,7 +37,7 @@ class EmailConfirm(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     code = models.CharField(max_length=6)
     def is_expired(self):
-        return timezone.now() > self.created_at + timedelta(minutes=5)
+        return timezone.now() > self.created_at + timedelta(minutes=2)
 
     def __str__(self):
         return self.user.username
