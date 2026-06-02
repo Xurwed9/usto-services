@@ -75,6 +75,14 @@
             <div class="dropdown">
                 <button class="dropbtn">Categories ▼</button>
                 <div class="dropdown-content">
+                    {% if request.user.is_authenticated %}
+    
+    {% if request.user.role == 'master' %}
+        <a href="{% url 'create_service' %}" style="color: green; font-weight: bold;">+ Иловаи хизматрасонӣ</a>
+    {% endif %}
+    
+    <a href="{% url 'profile' %}">Профил</a>
+{% endif %}
                     {% for cat in categories %}
                         <a href="/services/category/{{ cat.slug }}/">{{ cat.name }}</a>
                     {% empty %}
