@@ -86,6 +86,12 @@ def login_user(request):
         return render(request, 'accounts/login.html')
     
 
+
+def logout_user(request):
+        logout(request)
+        return redirect('login')
+    
+
 def confirm_email(request):
 
     if request.method=='POST':
