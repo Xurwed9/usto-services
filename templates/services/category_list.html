@@ -1,0 +1,15 @@
+{% extends 'accounts/base.html' %}
+{% block main %}
+<div>
+    {% for category in categories %}
+        <div>
+            {% if category.icon %}
+                <img src="{{ category.icon.url }}" width="100" height="100" alt="">
+            {% else %}
+                <h2>No icon</h2>
+            {% endif %}
+        </div>
+        <a href="#"><p><b>Category: </b>{{category.name}}</p></a>
+    {% endfor %}
+</div>
+{% endblock %}
