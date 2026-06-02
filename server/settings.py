@@ -124,9 +124,9 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# AUTHENTICATION_BACKENDS = [
-#     "accounts.backend.EmailOrUsernameBackend",
-# ]
+AUTHENTICATION_BACKENDS = [
+    "accounts.backend.EmailOrUsernameBackend",
+]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.User'
