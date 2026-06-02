@@ -3,14 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TajService</title>
+    
+    <style>
+        nav {
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 10px 20px;
+            gap: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+
+        /* Контейнери асосии менюи афтанда */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Тугмае, ки болош курсорро мебарем */
+        .dropbtn {
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px 0; /* Каме падинг додем, то бурдани курсор осон шавад */
+        }
+
+        /* Рӯйхати пинҳонӣ (автоматӣ пинҳон аст) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ffffff;
+            min-width: 180px; /* Каме васеътар кардем, то текстҳо сиб нашаванд */
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            z-index: 100; /* Сатҳро баланд кардем, то аз болои дигар блокҳо гузарад */
+            border-radius: 4px;
+            margin-top: 0px;
+        }
+
+        /* Ссылкаҳои дохили рӯйхати афтанда */
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 15px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Ранги ссылкаҳо вақте курсор болошон меравад */
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Вақте курсор болои .dropdown меравад, рӯйхатро нишон деҳ */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
-            <a href="{% url 'register' %}">register</a>
-            <a href="{% url 'login' %}">login</a>
-            <a href="{% url 'logout' %}">logout</a>
+            <a href="/" style="font-weight: bold;">TajService</a>
+
+            <div class="dropdown">
+                <button class="dropbtn">Categories ▼</button>
+                <div class="dropdown-content">
+                    {% for cat in categories %}
+                        <a href="/services/category/{{ cat.slug }}/">{{ cat.name }}</a>
+                    {% empty %}
+                        <a href="#">No categories</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div style="margin-left: auto; display: flex; gap: 15px;">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'logout' %}">logout</a>
+                {% else %}
+                    <a href="{% url 'register' %}">register</a>
+                    <a href="{% url 'login' %}">login</a>
+                {% endif %}
+            </div>
         </nav>
     </header>
 
@@ -19,7 +99,7 @@
     {% endblock %}
 
     <footer>
-        <h2>footer</h2>
+        <h2 style="text-align: center; margin-top: 5px;">footer</h2>
     </footer>
 </body>
 </html>
