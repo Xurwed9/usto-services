@@ -12,6 +12,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
+    
 
 class Service(models.Model):
     master = models.ForeignKey(
@@ -39,3 +40,42 @@ class Service(models.Model):
 
     def __str__(self):
         return f"{self.title} | {self.master.username}"
+    
+
+
+
+class Order(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending Approval'),
+        ('accepted', 'Accepted by Master'),
+        ('completed', 'Completed'),
+        ('canceled', 'Canceled'),
+    ]
+    client = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='orders',
+        verbose_name="Client"
+    )
+    service = models.ForeignKey(
+        Service, 
+        on_delete=models.CASCADE, 
+        related_name='orders',
+        verbose_name="Requested Service"
+    )
+    description = models.TextField(verbose_name="Problem Description / Order Details")
+    address = models.CharField(max_length=255, verbose_name="Delivery Address")
+    
+    status = models.CharField(
+        max_length=20, 
+        choices=STATUS_CHOICES, 
+        default='pending', 
+        verbose_name="Order Status"
+    )
+    
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Ordered At")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated At")
+
+
+    def __str__(self):
+        return f"Order #{self.id} | {self.client.username} -> {self.status}"
