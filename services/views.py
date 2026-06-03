@@ -107,3 +107,13 @@ def delete_service(request, pk):
     if service.master == request.user:
         service.delete()
     return redirect('service_list')
+
+
+@login_required
+def toggle_service_status(request, pk):
+    service = get_object_or_404(Service, pk=pk)
+    if service.master == request.user:
+        service.is_active = not service.is_active
+        service.save()
+    return redirect('profile') 
+

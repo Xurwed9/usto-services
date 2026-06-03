@@ -61,9 +61,19 @@
                             <h4 style="margin: 0 0 5px 0; color: #2d3748;">{{ service.title }}</h4>
                             <span style="color: #319795; font-weight: bold;">{{ service.price }} TJS</span>
                         </div>
-                        <div style="display: flex; gap: 10px;">
-                            <a href="/services/service/{{ service.id }}/edit/" style="background: #ecc94b; color: #744210; padding: 6px 12px; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: bold;">Edit</a>
-                        </div>
+                        {% if service.master == request.user %}
+    <div style="display: flex; gap: 15px; margin-top: 10px;">
+        <a href="{% url 'update_service' service.id %}" style="color: #3182ce; text-decoration: none; font-weight: bold; font-size: 14px;">
+            Edit 📝
+        </a>
+        
+        <a href="{% url 'delete_service' service.id %}" 
+           onclick="return confirm('Оё шумо дар ҳақиқат мехоҳед ин хизматрасониро нест кунед?');" 
+           style="color: #e53e3e; text-decoration: none; font-weight: bold; font-size: 14px;">
+            Delete ❌
+        </a>
+    </div>
+{% endif %}
                     </div>
                 {% empty %}
                     <p style="color: #718096; text-align: center; padding: 20px;">You haven't added any services yet.</p>
