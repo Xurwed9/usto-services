@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 import environ
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
@@ -145,4 +147,4 @@ EMAIL_HOST_USER = 'iskandarovhursed85@gmail.com'
 EMAIL_HOST_PASSWORD = 'tcwy qvnd dqph hckk'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-GROQ_API_KEY = env('GROQ_API_KEY')
+GROQ_API_KEY = env('GROQ_API_KEY', default='')

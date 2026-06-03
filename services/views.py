@@ -254,42 +254,40 @@ def leave_review(request, order_id):
 
 def ai_help(request):
     client = Groq(api_key=settings.GROQ_API_KEY)
-
+    
     prompt = request.GET.get('promt', '').strip()
+    ai_answer = ""
 
-    services_list = Service.objects.select_related('category').all()
+    PROMPT_FOR_AI = """
+    Ту НАҚШИ як консультанти супер-интеллектуалӣ, дӯстона ва ҳақиқиро дар сомонаи 'TajService' дорӣ.
+    Ту танҳо як боти хушк нестӣ, ту мисли ChatGPT Premium ҳастӣ: озод, зинда, босавод ва дӯстона!
 
-    services_data = []
-    for s in services_list:
-        services_data.append({
-            'ном': s.name,
-            'категория': s.category.name if s.category else "Умумӣ",
-            'нарх': f"{s.price} сомонӣ" if s.price else "бо маслиҳат"
-        })
-
-    SYSTEM_CONTEXT = f"""
-    Ту консультанти AI дар сомонаи 'TajService' ҳастӣ. Вазифаи ту кумак ба мизоҷон барои ёфтани устаҳо ва хизматрасониҳост.
-    Бо забони тоҷикӣ, бисёр боодобона ва дӯстона ҷавоб деҳ.
-    Ин ҷо рӯйхати хизматрасониҳои мо ҳаст: {services_data}
-    Агар корбар чизи наздик ба инҳоро пурсад, аз ҳамин рӯйхат тавсия деҳ.
+    ҚОИДАҲОИ МУҲИМ БАРОИ СӮҲБАТ:
+    1. Ба ҳамон забоне ҷавоб деҳ, ки корбар навиштааст (Тоҷикӣ -> Тоҷикӣ, Русский -> Русский, English -> English).
+    2. Забони тоҷикиат бояд комилан табиӣ, ширин, равон ва бидуни хатогиҳои роботӣ бошад. Аз калимаҳои зиндаи сӯҳбатӣ истифода бар.
+    3. Ҳеҷ гоҳ мустақим нагӯй: "Ман як модели сунъӣ ҳастам" ё "Ман бот ҳастам". Мисли одами ҳақиқӣ гап зан.
+    4. Ту метавонӣ дар бораи ҲАМАИ МАВЗӮЪҲОИ ДУНЁ озодона гап занӣ: технология, ҳаёт, мошинҳо, коду барномасозӣ, филмҳо, таърих, шухиҳо ва ғайра. Ҳеҷ маҳдудият нест!
+    5. Агар корбар шӯхӣ кунад -> шӯхӣ кун ва табиӣ ҷавоб деҳ. Агар ҷиддӣ бошад -> касбӣ ҷавоб деҳ.
+    6. Аз Эмоҷиҳо (emoji 👍✨🔥) мувофиқи маврид истифода кун, то ҷавобҳоят ҷолиб ва хонданибоб шаванд, лекин зӯракиву бисёр накун.
+    7. Ҷавобҳоят бояд содда, аниқ, тезфаҳм ва кӯмаккунанда бошанд. Ба ҷои ҷавоби кӯтоҳи хушк, мисолҳо биёр ва фикрронӣ кун.
+    8. Ҳамчун ёрдамчии TajService, агар сӯҳбат мувофиқат кунад, метавонӣ оҳиста ва табиӣ корбарро ба истифодаи хизматрасониҳои устаҳои сомонаи мо ташвиқ кунӣ (лекин зӯракию безоркунанда не!).
     """
 
-    ai_answer = ""
     if prompt:
         try:
             chat_completion = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[
-                    {"role": "system", "content": SYSTEM_CONTEXT},
+                    {"role": "system", "content": PROMPT_FOR_AI},
                     {"role": "user", "content": prompt},
                 ],
+                temperature=0.7, 
             )
             ai_answer = chat_completion.choices[0].message.content
         except Exception as e:
-            ai_answer = f"Бубахшед, ҳозир ҷавоб дода наметавонам. (Хатогӣ: {str(e)})"
+            ai_answer = "⚠️ Бубахшед, ҳозир система каме банд аст. Лутфан дубора кӯшиш кунед."
 
     return render(request, 'services/service_list.html', {
-        'services': services_list,
         'ai_answer': ai_answer,
         'user_prompt': prompt
     })
