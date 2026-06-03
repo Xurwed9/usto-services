@@ -9,7 +9,7 @@ from django.db.models import Q
 def category_services(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     
-    services = Service.objects.filter(category=category).order_by('-id')
+    services = Service.objects.filter(category=category).filter(is_active=True).order_by('-id')
     
     categories = Category.objects.all()
     
@@ -144,7 +144,7 @@ def service_search(request):
 def create_order(request, pk):
     service = get_object_or_404(Service, pk = pk, is_active=True)
     if service.master == request.user:
-        return redirect('service_detail', pk=pk)
+        return redirect('service_detail', id=pk)
     if request.method=='POST':
         description = request.POST.get('description', '').strip()
         address = request.POST.get('address', '').strip()
