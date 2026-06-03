@@ -50,9 +50,16 @@
                 <a href="/services/{{ service.id }}/" style="display: block; text-align: center; background: #3182ce; color: white; padding: 10px; text-decoration: none; font-weight: bold; font-size: 14px;">
                     Тамос бо усто
                 </a>
-                <a href="{% url 'update_service' service.pk %}" style="color: #3182ce; text-decoration: none; font-weight: bold;">
-    Edit 📝
-</a>
+                {% if service.master == request.user %}
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <a href="{% url 'update_service' service.id %}" style="color: #3182ce; text-decoration: none; font-weight: bold; font-size: 14px;">
+            Edit 📝
+        </a>
+        <a href="#" style="color: #e53e3e; text-decoration: none; font-weight: bold; font-size: 14px;">
+            Delete ❌
+        </a>
+    </div>
+{% endif %}
 
             </div>
         {% empty %}

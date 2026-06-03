@@ -100,3 +100,10 @@ def update_service(request, pk):
         'categories': categories,
         'title': 'Таҳрири хизматрасонӣ'
     })
+
+
+def delete_service(request, pk):
+    service = get_object_or_404(Service, pk=pk)
+    if service.master == request.user:
+        service.delete()
+    return redirect('service_list')
