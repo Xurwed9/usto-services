@@ -220,3 +220,30 @@ def forgot_password_request(request):
         return render(request, 'accounts/forgot_password_confirm.html', {'email': email})
         
     return render(request, 'accounts/forgot_password.html')
+
+
+def forgot_password_verify(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        code = request.POST.get('code')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        
+        user = User.objects.filter(email=email).first()
+        if not user:
+            return render(request, 'accounts/forgot_password_confirm.html', {'error': 'Хатогӣ рӯй дод!', 'email': email})
+            
+        if password1 != password2:
+            return render(request, 'accounts/forgot_password_confirm.html', {'error': 'Паролҳо мувофиқат наомаданд!', 'email': email})
+            
+        confirm = EmailConfirm.objects.filter(user=user, code=code).first()
+        if not confirm:
+            return render(request, 'accounts/forgot_password_confirm.html', {'error': 'Коди воридшуда хато аст!', 'email': email})
+            
+        user.set_password(password1)
+        user.save()
+        confirm.delete()
+        
+        return render(request, 'accounts/login.html', {'success': 'Пароли шумо бомуваффақият иваз шуд! Ворид шавед.'})
+        
+    return redirect('login')
