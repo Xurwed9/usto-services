@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import Category,Service
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 # Create your views here.
 
@@ -26,7 +27,7 @@ def category_list(request):
 
 
 def service_list(request):
-    services = Service.objects.all().order_by('-id')
+    services = Service.objects.filter(is_active=True).order_by('-id')
     categories = Category.objects.all()
     
     context = {

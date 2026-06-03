@@ -61,6 +61,11 @@
            style="color: #e53e3e; text-decoration: none; font-weight: bold; font-size: 14px;">
             Delete ❌
         </a>
+        <a href="{% url 'toggle_service_status' service.pk %}" 
+           style="padding: 5px 10px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; 
+                  {% if service.is_active %} background-color: #feebc8; color: #c05621; {% else %} background-color: #c6f6d5; color: #22543d; {% endif %}">
+            {% if service.is_active %} Пинҳон кардан 👁️‍🗨️ {% else %} Фаъол кардан ✅ {% endif %}
+        </a>
     </div>
 {% endif %}
 
