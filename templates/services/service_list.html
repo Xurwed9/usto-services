@@ -51,11 +51,14 @@
                     Тамос бо усто
                 </a>
                 {% if service.master == request.user %}
-    <div style="display: flex; gap: 10px; margin-top: 10px;">
+    <div style="display: flex; gap: 15px; margin-top: 10px;">
         <a href="{% url 'update_service' service.id %}" style="color: #3182ce; text-decoration: none; font-weight: bold; font-size: 14px;">
             Edit 📝
         </a>
-        <a href="#" style="color: #e53e3e; text-decoration: none; font-weight: bold; font-size: 14px;">
+        
+        <a href="{% url 'delete_service' service.id %}" 
+           onclick="return confirm('Оё шумо дар ҳақиқат мехоҳед ин хизматрасониро нест кунед?');" 
+           style="color: #e53e3e; text-decoration: none; font-weight: bold; font-size: 14px;">
             Delete ❌
         </a>
     </div>
