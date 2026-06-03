@@ -1,0 +1,81 @@
+{% extends "accounts/base.html" %}
+{% block main %}
+
+<div style="max-width: 1100px; margin: 40px auto; padding: 0 20px; font-family: sans-serif;">
+    
+    <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+        
+        <div style="flex: 2; min-width: 450px;">
+            <h1 style="color: #2d3748; margin-top: 0; font-size: 28px; line-height: 1.3;">{{ service.title }}</h1>
+            
+            <span style="display: inline-block; background: #ebf8ff; color: #2b6cb0; font-size: 14px; font-weight: bold; padding: 5px 12px; border-radius: 6px; margin-bottom: 20px;">
+                Категория: {{ service.category.name }}
+            </span>
+
+            <div style="width: 100%; max-height: 450px; border-radius: 12px; overflow: hidden; background: #edf2f7; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                {% if service.image %}
+                    <img src="{{ service.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?q=80&w=800" style="width: 100%; height: 100%; object-fit: cover;">
+                {% endif %}
+            </div>
+
+            <h3 style="color: #2d3748; border-bottom: 2px solid #edf2f7; padding-bottom: 10px;">Тавсифи хизматрасонӣ</h3>
+            <p style="color: #4a5568; font-size: 16px; line-height: 1.7; white-space: pre-line;">
+                {{ service.description }}
+            </p>
+        </div>
+
+        <div style="flex: 1; min-width: 320px;">
+            <div style="border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; background: #fff; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); position: sticky; top: 20px;">
+                
+                <div style="text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #edf2f7;">
+                    <span style="font-size: 14px; color: #718096; display: block; margin-bottom: 5px;">Нархи хизматрасонӣ:</span>
+                    <span style="font-size: 32px; font-weight: bold; color: #38a169;">{{ service.price }} TJS</span>
+                </div>
+
+                <h4 style="margin: 0 0 15px 0; color: #4a5568; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Маълумоти усто</h4>
+                
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    {% if service.master.profile.photo %}
+                        <img src="{{ service.master.profile.photo.url }}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" style="width: 60px; height: 60px; border-radius: 50%;">
+                    {% endif %}
+                    
+                    <div>
+                        <h3 style="margin: 0; color: #2d3748; font-size: 18px;">{{ service.master.username }}</h3>
+                        <span style="color: #e53e3e; font-weight: bold; font-size: 14px;">⭐ {{ service.master.profile.rating|default:"5.0" }} / 5.0</span>
+                    </div>
+                </div>
+
+                <div style="background: #f7fafc; padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; font-size: 14px;">
+                    <div><span style="font-weight: bold; color: #4a5568;">Таҷрибаи корӣ:</span> {{ service.master.profile.experience|default:"0" }} сол</div>
+                    <div><span style="font-weight: bold; color: #4a5568;">Шаҳр:</span> {{ service.master.profile.city|default:"Душанбе" }}</div>
+                    <div><span style="font-weight: bold; color: #4a5568;">Телефон:</span> <a href="tel:{{ service.master.phone }}" style="color: #3182ce; font-weight: bold; text-decoration: none;">{{ service.master.phone|default:"Нишон дода нашудааст" }}</a></div>
+                </div>
+
+                {% if service.master.profile.bio %}
+                    <div style="margin-bottom: 20px;">
+                        <span style="font-weight: bold; font-size: 14px; color: #4a5568; display: block; margin-bottom: 5px;">Дар бораи усто:</span>
+                        <p style="margin: 0; color: #718096; font-size: 13px; font-style: italic; line-height: 1.4;">{{ service.master.profile.bio }}</p>
+                    </div>
+                {% endif %}
+
+                <a href="#" style="display: block; text-align: center; background: #3182ce; color: white; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; transition: background 0.2s;">
+                    Заказ кардан (Дархост)
+                </a>
+
+                <a href="https://wa.me/{{ service.master.phone }}?text=Салом!%20Ман%20хизматрасонии%20шуморо%20дар%20TajService%20дидам:%20{{ service.title }}" 
+   target="_blank" 
+   style="display: block; text-align: center; background: #25D366; color: white; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px; margin-top: 10px;">
+    Чат дар WhatsApp 💬
+</a>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
