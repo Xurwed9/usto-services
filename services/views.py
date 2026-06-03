@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import Category,Service
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -73,3 +74,4 @@ def create_service(request):
         return render(request, 'services/service_form.html', 
                       {'title': 'Иловаи хизматрасонии нав',
                        'categories': categories})
+    
