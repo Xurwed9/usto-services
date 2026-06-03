@@ -76,7 +76,7 @@
 
                     <div style="margin-top: 15px;">
                         {% if order.status == 'pending' %}
-                            <a href="{% url 'cancel_order_by_client' order.pk %}" 
+                            <a href="{% url 'cancel_order' order.pk %}" 
                                onclick="return confirm('Оё шумо дар ҳақиқат мехоҳед ин фармоишро бекор кунед?');"
                                style="background: #e53e3e; color: white; padding: 6px 12px; text-decoration: none; border-radius: 5px; font-size: 13px; font-weight: bold; display: inline-block;">
                                Бекор кардани заказ ❌
