@@ -139,3 +139,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'iskandarovhursed85@gmail.com'
 EMAIL_HOST_PASSWORD = 'tcwy qvnd dqph hckk'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+GROQ_API_KEY = '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'

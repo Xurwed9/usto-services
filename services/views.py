@@ -2,7 +2,8 @@ from django.shortcuts import render,redirect,get_object_or_404
 from .models import Category,Service,Order,Review
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Avg
-
+from groq import Groq
+from django.conf import settings
 
 # Create your views here.
 
@@ -247,3 +248,48 @@ def leave_review(request, order_id):
         return redirect('service_detail', id=order.service.id)
         
     return render(request, 'services/leave_review.html', {'order': order})
+
+
+
+
+def ai_help(request):
+    client = Groq(api_key=settings.GROQ_API_KEY)
+
+    prompt = request.GET.get('promt', '').strip()
+
+    services_list = Service.objects.select_related('category').all()
+
+    services_data = []
+    for s in services_list:
+        services_data.append({
+            'ном': s.name,
+            'категория': s.category.name if s.category else "Умумӣ",
+            'нарх': f"{s.price} сомонӣ" if s.price else "бо маслиҳат"
+        })
+
+    SYSTEM_CONTEXT = f"""
+    Ту консультанти AI дар сомонаи 'TajService' ҳастӣ. Вазифаи ту кумак ба мизоҷон барои ёфтани устаҳо ва хизматрасониҳост.
+    Бо забони тоҷикӣ, бисёр боодобона ва дӯстона ҷавоб деҳ.
+    Ин ҷо рӯйхати хизматрасониҳои мо ҳаст: {services_data}
+    Агар корбар чизи наздик ба инҳоро пурсад, аз ҳамин рӯйхат тавсия деҳ.
+    """
+
+    ai_answer = ""
+    if prompt:
+        try:
+            chat_completion = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "system", "content": SYSTEM_CONTEXT},
+                    {"role": "user", "content": prompt},
+                ],
+            )
+            ai_answer = chat_completion.choices[0].message.content
+        except Exception as e:
+            ai_answer = f"Бубахшед, ҳозир ҷавоб дода наметавонам. (Хатогӣ: {str(e)})"
+
+    return render(request, 'services/service_list.html', {
+        'services': services_list,
+        'ai_answer': ai_answer,
+        'user_prompt': prompt
+    })
