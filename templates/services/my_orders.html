@@ -81,7 +81,7 @@
                                style="background: #e53e3e; color: white; padding: 6px 12px; text-decoration: none; border-radius: 5px; font-size: 13px; font-weight: bold; display: inline-block;">
                                Бекор кардани заказ ❌
                             </a>
-                        {% elif order.status == 'canceled' %}
+                        {% elif order.status == 'canceled' and request.user.master ==  request.user%}
                             <span style="color: #e53e3e; font-size: 13px; font-weight: bold; display: block; margin-top: 5px;">
                                 Шумо ин заказро бекор кардед
                             </span>

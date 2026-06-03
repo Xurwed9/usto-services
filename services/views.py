@@ -186,8 +186,19 @@ def cancel_order(request, pk):
 @login_required
 def update_order_status(request, pk, status):
     order = get_object_or_404(Order, pk=pk)
+    
     if order.service.master == request.user:
         if status in ['accepted', 'canceled', 'completed']:
             order.status = status
+            
+            service = order.service
+            if status == 'accepted':
+                service.is_active = False
+                service.save()
+            elif status == 'completed' or status == 'canceled':
+                service.is_active = True
+                service.save()
+            
             order.save()
+            
     return redirect('my_orders')
