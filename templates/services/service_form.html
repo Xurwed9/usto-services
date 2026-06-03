@@ -1,9 +1,11 @@
 {% extends "accounts/base.html" %}
 
 {% block main %}
-<div style="max-width: 700px; margin: 40px auto; padding: 30px; border: 1px solid #e2e8f0; border-radius: 15px; background: #fff; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+<div style="max-width: 700px; margin: 40px auto; padding: 30px; border: 1px solid #e2e8f0; border-radius: 15px; background: #fff; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); font-family: sans-serif;">
     
-    <h2 style="margin-bottom: 25px; color: #2d3748; text-align: center; font-size: 24px;">{{ title }}</h2>
+    <h2 style="margin-bottom: 25px; color: #2d3748; text-align: center; font-size: 24px;">
+        {% if service %} Таҳрири хизматрасонӣ 📝 {% else %} Иловаи хизматрасонии нав ➕ {% endif %}
+    </h2>
 
     {% if error %}
         <div style="background-color: #fff5f5; border-left: 4px solid #f56565; color: #c53030; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
@@ -17,39 +19,49 @@
         <div>
             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #4a5568;">Категория:</label>
             <select name="category" style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e0; border-radius: 8px; font-size: 16px; outline: none;" required>
-                <option value="" disabled selected>Категорияро интихоб кунед</option>
-                {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.name }}</option>
+                <option value="" disabled {% if not service %}selected{% endif %}>Категорияро интихоб кунед</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if service.category.id == cat.id %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
                 {% endfor %}
             </select>
         </div>
 
         <div>
             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #4a5568;">Номи хизматрасонӣ (Title):</label>
-            <input type="text" name="title" placeholder="Масалан: Сохтани сайтҳои мураккаб" style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e0; border-radius: 8px; font-size: 16px;" required>
+            <input type="text" name="title" value="{{ service.title|default:'' }}" placeholder="Масалан: Монтаж ва ремонти сантехника" style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e0; border-radius: 8px; font-size: 16px;" required>
         </div>
 
         <div>
             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #4a5568;">Нарх (бо сомонӣ):</label>
-            <input type="number" name="price" placeholder="Масалан: 500" style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e0; border-radius: 8px; font-size: 16px;" required>
+            <input type="number" name="price" value="{{ service.price|default:'' }}" placeholder="Масалан: 100" style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e0; border-radius: 8px; font-size: 16px;" required>
         </div>
 
         <div>
             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #4a5568;">Тавсифи пурра (Description):</label>
-            <textarea name="description" rows="5" placeholder="Дар бораи хизматрасонии худ маълумоти пурра диҳед..." style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e0; border-radius: 8px; font-size: 16px; resize: vertical;" required></textarea>
+            <textarea name="description" rows="5" placeholder="Дар бораи хизматрасонии худ маълумоти пурра диҳед..." style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e0; border-radius: 8px; font-size: 16px; resize: vertical;" required>{{ service.description|default:'' }}</textarea>
         </div>
 
         <div>
             <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #4a5568;">Расми хизматрасонӣ:</label>
-            <div style="position: relative; border: 2px dashed #cbd5e0; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer;">
+            
+            {% if service.image %}
+                <div style="margin-bottom: 10px;">
+                    <span style="font-size: 14px; color: #718096; display: block; margin-bottom: 5px;">Расми ҳозира:</span>
+                    <img src="{{ service.image.url }}" style="width: 120px; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e0;">
+                </div>
+            {% endif %}
+            
+            <div style="position: relative; border: 2px dashed #cbd5e0; padding: 15px; text-align: center; border-radius: 8px;">
                 <input type="file" name="image" accept="image/*" style="width: 100%;">
-                <p style="color: #718096; font-size: 14px; margin-top: 5px;">Расмро интихоб кунед (JPG, PNG)</p>
+                <p style="color: #718096; font-size: 13px; margin-top: 5px;">Барои иваз кардан ё илова кардани расми нав интихоб кунед</p>
             </div>
         </div>
 
         <div style="display: flex; gap: 15px; margin-top: 10px;">
-            <button type="submit" style="flex: 2; background-color: #38a169; color: white; padding: 14px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s;">
-                Илова кардан
+            <button type="submit" style="flex: 2; background-color: #3182ce; color: white; padding: 14px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer;">
+                {% if service %} Сабт кардани тағирот {% else %} Илова кардан {% endif %}
             </button>
             <a href="{% url 'profile' %}" style="flex: 1; text-align: center; background-color: #e2e8f0; color: #4a5568; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: 600; line-height: 1.5;">
                 Бекор кардан
