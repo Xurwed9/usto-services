@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import Category,Service,Order,Review
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Avg
+
 
 # Create your views here.
 
@@ -36,14 +37,28 @@ def service_list(request):
     }
     return render(request, 'services/service_list.html', context)
 
+
 @login_required
 def service_detail(request, id):
     service = get_object_or_404(Service, id=id)
     
+    reviews = Review.objects.filter(master=service.master).select_related('client').order_by('-created_at')
+    
+    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+    
+    if avg_rating:
+        avg_rating = round(avg_rating, 1)
+    else:
+        avg_rating = "Ҳоло баҳо дода нашудааст"
+
     context = {
         'service': service,
+        'reviews': reviews,
+        'avg_rating': avg_rating,
+        'reviews_count': reviews.count(), 
     }
     return render(request, 'services/service_detail.html', context)
+
 
 @login_required
 def create_service(request):
