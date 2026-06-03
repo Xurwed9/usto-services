@@ -118,3 +118,20 @@ def toggle_service_status(request, pk):
         service.save()
     return redirect('profile') 
 
+
+def service_search(request):
+    query = request.GET.get('q', '').strip()
+    categories = Category.objects.all()
+    services = Service.objects.filter(is_active=True).select_related('category', 'master')
+    
+    if query:
+        services = services.filter(
+            Q(title__icontains=query) | Q(description__icontains=query)
+        )
+    
+    context = {
+        'services': services,
+        'categories': categories,
+        'query': query,
+    }
+    return render(request, 'services/service_list.html', context)
