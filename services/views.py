@@ -167,7 +167,7 @@ def create_order(request, pk):
 def my_orders(request):
     my_requests = Order.objects.filter(client=request.user).select_related('service__master', 'service__category').order_by('-created_at')
     incoming_orders = Order.objects.filter(service__master=request.user).select_related('client','service').order_by('-created_at')
-    return render(request, 'service/my_orders.html', {
+    return render(request, 'services/my_orders.html', {
         'my_requests': my_requests,
         'incoming_orders': incoming_orders,
     })

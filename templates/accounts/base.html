@@ -82,9 +82,10 @@
             {% empty %}
                 <a href="#">No categories</a>
             {% endfor %}
+
         </div>
     </div>
-            
+                <a href="{% url 'my_orders' %}">my orders</a>
             {% if request.user.role == 'master' %}
                 <a href="{% url 'create_services' %}" style="color: #28a745; font-weight: bold; text-decoration: none;">+ Иловаи хизматрасонӣ</a>
             {% endif %}
