@@ -1,11 +1,11 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Category,Service
+from .models import Category,Service,Order
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
 # Create your views here.
 
-
+@login_required
 def category_services(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     
@@ -20,7 +20,7 @@ def category_services(request, category_slug):
     }
     return render(request, 'services/category_services.html', context)
 
-
+@login_required
 def category_list(request):
     categories = Category.objects.all()
     return render(request, 'services/category_list.html', {'categories': categories})
@@ -36,7 +36,7 @@ def service_list(request):
     }
     return render(request, 'services/service_list.html', context)
 
-
+@login_required
 def service_detail(request, id):
     service = get_object_or_404(Service, id=id)
     
@@ -45,6 +45,7 @@ def service_detail(request, id):
     }
     return render(request, 'services/service_detail.html', context)
 
+@login_required
 def create_service(request):
     if request.user.role!='master':
         return redirect('/')
@@ -102,7 +103,7 @@ def update_service(request, pk):
         'title': 'Таҳрири хизматрасонӣ'
     })
 
-
+@login_required
 def delete_service(request, pk):
     service = get_object_or_404(Service, pk=pk)
     if service.master == request.user:
@@ -119,6 +120,7 @@ def toggle_service_status(request, pk):
     return redirect('profile') 
 
 
+@login_required
 def service_search(request):
     query = request.GET.get('q', '').strip()
     categories = Category.objects.all()
@@ -135,3 +137,28 @@ def service_search(request):
         'query': query,
     }
     return render(request, 'services/service_list.html', context)
+
+
+
+@login_required
+def create_order(request, pk):
+    service = get_object_or_404(Service, pk = pk, is_active=True)
+    if service.master == request.user:
+        return redirect('service_detail', pk=pk)
+    if request.method=='POST':
+        description = request.POST.get('description', '').strip()
+        address = request.POST.get('address', '').strip()
+
+        if not description or not address:
+            return render(request, 'services/order_form.html',
+                          {'service': service,
+                           'error': 'Лутфан, тавсиф ва суроғаро пур кунед!'})
+        Order.objects.create(
+            client=request.user,
+            service=service,
+            description=description,
+            address=address
+        )
+        return redirect('my_orders')
+        
+    return render(request, 'services/order_form.html', {'service': service})

@@ -72,7 +72,9 @@
         <nav style="display: flex; align-items: center; gap: 20px; padding: 10px 20px; background: #fff; border-bottom: 1px solid #ddd;">
     <a href="/" style="font-weight: bold; text-decoration: none; color: #333; font-size: 20px;">TajService</a>
 
-    <div class="dropdown">
+    <div style="margin-left: auto; display: flex; gap: 15px; align-items: center;">
+        {% if request.user.is_authenticated %}
+             <div class="dropdown">
         <button class="dropbtn">Categories ▼</button>
         <div class="dropdown-content">
             {% for cat in categories %}
@@ -82,9 +84,6 @@
             {% endfor %}
         </div>
     </div>
-
-    <div style="margin-left: auto; display: flex; gap: 15px; align-items: center;">
-        {% if request.user.is_authenticated %}
             
             {% if request.user.role == 'master' %}
                 <a href="{% url 'create_services' %}" style="color: #28a745; font-weight: bold; text-decoration: none;">+ Иловаи хизматрасонӣ</a>
