@@ -9,7 +9,7 @@ def category_list(request):
     return render(request, 'services/category_list.html', {'categories': categories})
 
 
-def home_page(request):
+def service_list(request):
     services = Service.objects.all().order_by('-id')
     categories = Category.objects.all()
     
