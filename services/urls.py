@@ -7,4 +7,5 @@ urlpatterns = [
     path('services/<int:id>/', views.service_detail, name='service_detail'),
     path('services/category/<slug:category_slug>/', views.category_services, name='category_services'),
     path('service/update/<int:pk>/', views.update_service, name='update_service'),
+    path('service/delete/<int:pk>', views.delete_service, name='delete_service'),
 ]
