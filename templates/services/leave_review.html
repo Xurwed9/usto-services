@@ -1,0 +1,51 @@
+{% extends 'accounts/base.html' %}
+
+{% block main %}
+<div style="max-width: 600px; margin: 40px auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 10px; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+    
+    <h2 style="color: #2d3748; margin-top: 0; border-bottom: 2px solid #3182ce; padding-bottom: 10px;">Баҳодиҳӣ ба усто</h2>
+    <p style="color: #4a5568;">Лутфан, фикри худро дар бораи кори усто <strong>{{ order.service.master.username }}</strong> нависед.</p>
+    
+    <p style="font-weight: bold; margin-bottom: 5px;">Хизматрасонӣ:</p>
+    <div style="background: #f7fafc; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        {{ order.service.title }}
+    </div>
+
+    {% if error %}
+        <div style="background: #fed7d7; color: #9b2c2c; padding: 10px; border-radius: 5px; margin-bottom: 20px; font-weight: bold;">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_markdown %}
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 8px;">Баҳо (Ситораҳо):</label>
+            <select name="rating" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #cbd5e0; font-size: 16px;">
+                <option value="">-- Интихоб кунед --</option>
+                <option value="5">5 Ситора ⭐⭐⭐⭐⭐ (Аъло)</option>
+                <option value="4">4 Ситора ⭐⭐⭐⭐ (Хуб)</option>
+                <option value="3">3 Ситора ⭐⭐⭐ (Миёна)</option>
+                <option value="2">2 {{ order.get_status_display|default:"Ситора" }} ⭐⭐ (Бад)</option>
+                <option value="1">1 Ситора ⭐ (Хеле бад)</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 8px;">Фикри шумо (Шарҳ):</label>
+            <textarea name="comment" rows="5" placeholder="Дар бораи сифати кор, муомила ва нархи усто нависед..." style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #cbd5e0; font-size: 15px; resize: vertical; box-sizing: border-box;"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" style="background: #3182ce; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 15px;">
+                Фиристодани шарҳ 🚀
+            </button>
+            <a href="{% url 'my_orders' %}" style="background: #edf2f7; color: #4a5568; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 15px; display: inline-block;">
+                Отказ
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
