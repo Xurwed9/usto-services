@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from .models import Category,Service
 
 # Create your views here.
@@ -17,7 +17,16 @@ def service_list(request):
         'services': services,
         'categories': categories
     }
-    return render(request, 'services/home.html', context)
+    return render(request, 'services/service_list.html', context)
+
+
+def service_detail(request, id):
+    service = get_object_or_404(Service, id=id)
+    
+    context = {
+        'service': service,
+    }
+    return render(request, 'services/service_detail.html', context)
 
 def create_service(request):
     if request.user.role!='master':
