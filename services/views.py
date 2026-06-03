@@ -4,6 +4,21 @@ from .models import Category,Service
 # Create your views here.
 
 
+def category_services(request, category_slug):
+    category = get_object_or_404(Category, slug=category_slug)
+    
+    services = Service.objects.filter(category=category).order_by('-id')
+    
+    categories = Category.objects.all()
+    
+    context = {
+        'category': category,
+        'services': services,
+        'categories': categories,
+    }
+    return render(request, 'services/category_services.html', context)
+
+
 def category_list(request):
     categories = Category.objects.all()
     return render(request, 'services/category_list.html', {'categories': categories})
