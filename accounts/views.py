@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from random import randint
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from services.models import Service
 
 # Create your views here.
 
@@ -56,6 +58,7 @@ def register(request):
             return render(request, 'accounts/register.html', {'error': 'Phone already exists'})
         user = User.objects.create_user(username=username, email=email,
                                         password=password1, phone=phone,role=user_role)
+        Profile.objects.create(user=user)
         user.is_active=False
         user.save()
         send_confirmation_email(user)
@@ -127,3 +130,16 @@ def confirm_email(request):
     
 
 
+
+@login_required
+def my_profile(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    my_services = None
+    
+    if request.user.role == 'master':
+        my_services = Service.objects.filter(master=request.user)
+        
+    context = {
+        'my_services': my_services
+    }
+    return render(request, 'accounts/profile.html', context)

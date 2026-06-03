@@ -69,36 +69,37 @@
 </head>
 <body>
     <header>
-        <nav>
-            <a href="/" style="font-weight: bold;">TajService</a>
+        <nav style="display: flex; align-items: center; gap: 20px; padding: 10px 20px; background: #fff; border-bottom: 1px solid #ddd;">
+    <a href="/" style="font-weight: bold; text-decoration: none; color: #333; font-size: 20px;">TajService</a>
 
-            <div class="dropdown">
-                <button class="dropbtn">Categories ▼</button>
-                <div class="dropdown-content">
-                    {% if request.user.is_authenticated %}
-    
-    {% if request.user.role == 'master' %}
-        <a href="{% url 'create_service' %}" style="color: green; font-weight: bold;">+ Иловаи хизматрасонӣ</a>
-    {% endif %}
-    
-{% endif %}
-                    {% for cat in categories %}
-                        <a href="/services/category/{{ cat.slug }}/">{{ cat.name }}</a>
-                    {% empty %}
-                        <a href="#">No categories</a>
-                    {% endfor %}
-                </div>
-            </div>
+    <div class="dropdown">
+        <button class="dropbtn">Categories ▼</button>
+        <div class="dropdown-content">
+            {% for cat in categories %}
+                <a href="/services/category/{{ cat.slug }}/">{{ cat.name }}</a>
+            {% empty %}
+                <a href="#">No categories</a>
+            {% endfor %}
+        </div>
+    </div>
 
-            <div style="margin-left: auto; display: flex; gap: 15px;">
-                {% if request.user.is_authenticated %}
-                    <a href="{% url 'logout' %}">logout</a>
-                {% else %}
-                    <a href="{% url 'register' %}">register</a>
-                    <a href="{% url 'login' %}">login</a>
-                {% endif %}
-            </div>
-        </nav>
+    <div style="margin-left: auto; display: flex; gap: 15px; align-items: center;">
+        {% if request.user.is_authenticated %}
+            
+            {% if request.user.role == 'master' %}
+                <a href="{% url 'create_service' %}" style="color: #28a745; font-weight: bold; text-decoration: none;">+ Иловаи хизматрасонӣ</a>
+            {% endif %}
+
+            <a href="{% url 'profile' %}" style="text-decoration: none; color: #007bff; font-weight: bold;">Profile ({{ request.user.username }})</a>
+            
+            <a href="{% url 'logout' %}" style="text-decoration: none; color: #dc3545;">logout</a>
+            
+        {% else %}
+            <a href="{% url 'register' %}" style="text-decoration: none; color: #333;">register</a>
+            <a href="{% url 'login' %}" style="text-decoration: none; color: #333;">login</a>
+        {% endif %}
+    </div>
+</nav>
     </header>
 
     {% block main %}
