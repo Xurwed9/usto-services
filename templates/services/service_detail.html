@@ -62,9 +62,9 @@
                     </div>
                 {% endif %}
 
-                <a href="#" style="display: block; text-align: center; background: #3182ce; color: white; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; transition: background 0.2s;">
-                    Заказ кардан (Дархост)
-                </a>
+                <a href="{% url 'create_order' service.pk %}" style="display: block; text-align: center; background: #3182ce; color: white; padding: 12px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+    Фармоиш додан (Заказ) 🛒
+</a>
 
                 <a href="https://wa.me/{{ service.master.phone }}?text=Салом!%20Ман%20хизматрасонии%20шуморо%20дар%20TajService%20дидам:%20{{ service.title }}" 
    target="_blank" 
