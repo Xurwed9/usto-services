@@ -27,7 +27,7 @@ class Profile(models.Model):
     
     bio = models.TextField(blank=True, null=True, verbose_name="About Master")
     experience = models.PositiveIntegerField(default=0, verbose_name="Experience in years")
-    rating = models.DecimalField(max_digits=3, decimal_places=2, default=5.0, verbose_name="Rating")
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=4.0, verbose_name="Rating")
 
     def __str__(self):
         return f"Profile of {self.user.username}"
