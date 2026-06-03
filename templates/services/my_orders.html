@@ -1,0 +1,59 @@
+{% extends 'accounts/base.html' %}
+
+{% block main %}
+<div style="max-width: 1000px; margin: 20px auto; padding: 20px;">
+    
+    <!-- ҚИСМИ 1: ЗАКАЗҲОИ ОМАДА (БАРОИ УСТО) -->
+    <h2 style="border-bottom: 2px solid #38a169; padding-bottom: 10px; color: #2d3748;">📥 Заказҳои омада (ба ман)</h2>
+    {% if incoming_orders %}
+        <div style="display: grid; gap: 15px; margin-bottom: 40px; margin-top: 20px;">
+            {% for order in incoming_orders %}
+                <div style="border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; background: #f0fff4;">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <h4 style="margin: 0;">Хизматрасонӣ: {{ order.service.title }}</h4>
+                            <p style="margin: 5px 0;"><strong>Мизоҷ:</strong> {{ order.client.username }}</p>
+                            <p style="margin: 5px 0;"><strong>Суроға:</strong> {{ order.address }}</p>
+                            <p style="margin: 5px 0; font-style: italic;">"{{ order.description }}"</p>
+                        </div>
+                        <span style="padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; 
+                            {% if order.status == 'pending' %} background: #feebc8; color: #c05621;
+                            {% elif order.status == 'accepted' %} background: #c6f6d5; color: #22543d;
+                            {% else %} background: #edf2f7; color: #4a5568; {% endif %}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: #a0aec0; margin-bottom: 40px;">Ҳоло заказҳои нав нест.</p>
+    {% endif %}
+
+    <!-- ҚИСМИ 2: ЗАКАЗҲОИ МАН (БАРОИ МИЗОЧ) -->
+    <h2 style="border-bottom: 2px solid #3182ce; padding-bottom: 10px; color: #2d3748;">📤 Заказҳои ман (ба дигарон)</h2>
+    {% if my_requests %}
+        <div style="display: grid; gap: 15px; margin-top: 20px;">
+            {% for order in my_requests %}
+                <div style="border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; background: white;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>
+                            <h4 style="margin: 0;">{{ order.service.title }}</h4>
+                            <p style="margin: 5px 0;"><strong>Усто:</strong> {{ order.service.master.username }}</p>
+                            <small style="color: #a0aec0;">Сана: {{ order.created_at|date:"d.m.Y H:i" }}</small>
+                        </div>
+                        <div>
+                             <span style="padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; background: #ebf8ff; color: #2b6cb0;">
+                                {{ order.get_status_display }}
+                             </span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: #a0aec0;">Шумо ҳанӯз чизе заказ накардаед.</p>
+    {% endif %}
+
+</div>
+{% endblock %}
