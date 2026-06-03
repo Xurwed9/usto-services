@@ -143,3 +143,57 @@ def my_profile(request):
         'my_services': my_services
     }
     return render(request, 'accounts/profile.html', context)
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import User, Profile
+
+@login_required
+def edit_profile_view(request):
+    user = request.user
+    profile = user.profile  
+
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        age = request.POST.get('age')
+        city = request.POST.get('city', '').strip()
+        
+        bio = request.POST.get('bio', '').strip()
+        experience = request.POST.get('experience')
+        
+        photo = request.FILES.get('photo')
+
+        if not username or not email:
+            messages.error(request, 'Username and Email are required!')
+            return redirect('edit_profile')
+
+        if user.username != username and User.objects.filter(username=username).exists():
+            messages.error(request, 'This username is already taken!')
+            return redirect('edit_profile')
+
+        user.username = username
+        user.email = email
+        user.phone = phone
+        if age:
+            user.age = int(age)
+        user.save()
+
+        profile.city = city
+        if photo:
+            profile.photo = photo
+            
+        if user.role == 'master':
+            profile.bio = bio
+            if experience:
+                profile.experience = int(experience)
+                
+        profile.save()
+
+        messages.success(request, 'Your profile has been updated successfully!')
+        return redirect('profile') 
+    return render(request, 'accounts/edit_profile.html')
