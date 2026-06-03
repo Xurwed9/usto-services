@@ -99,6 +99,15 @@
             <a href="{% url 'login' %}" style="text-decoration: none; color: #333;">login</a>
         {% endif %}
     </div>
+    <form action="{% url 'service_search' %}" method="GET">
+        <input type="text" name="q" value="{{ query|default:''}}" placeholder="search">
+        <button type="submit">Search</button>
+    </form>
+    {% if query %}
+        <p style="text-align: center; color: #4a5568;">
+        Натиҷаи ҷустуҷӯ барои: <strong>"{{ query }}"</strong> ({{ services.count }} эълон ёфт шуд)
+    </p>
+    {% endif %}
 </nav>
     </header>
 
