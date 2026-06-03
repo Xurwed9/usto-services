@@ -73,18 +73,25 @@
                     </div>
 
                     <div style="margin-top: 15px;">
-                        {% if order.status == 'pending' %}
-                            <a href="{% url 'cancel_order' order.pk %}" 
-                               onclick="return confirm('Оё шумо дар ҳақиқат мехоҳед ин фармоишро бекор кунед?');"
-                               style="background: #e53e3e; color: white; padding: 6px 12px; text-decoration: none; border-radius: 5px; font-size: 13px; font-weight: bold; display: inline-block;">
-                               Бекор кардани заказ ❌
-                            </a>
-                        {% elif order.status == 'canceled' and request.user.master ==  request.user%}
-                            <span style="color: #e53e3e; font-size: 13px; font-weight: bold; display: block; margin-top: 5px;">
-                                Шумо ин заказро бекор кардед
-                            </span>
-                        {% endif %}
-                    </div>
+    {% if order.status == 'pending' %}
+        <a href="{% url 'cancel_order' order.pk %}" 
+           onclick="return confirm('Оё шумо дар ҳақиқат мехоҳед ин фармоишро бекор кунед?');"
+           style="background: #e53e3e; color: white; padding: 6px 12px; text-decoration: none; border-radius: 5px; font-size: 13px; font-weight: bold; display: inline-block;">
+           Бекор кардани заказ ❌
+        </a>
+    {% elif order.status == 'canceled' %}
+        <span style="color: #e53e3e; font-size: 13px; font-weight: bold;">Шумо ин заказро бекор кардед</span>
+    {% elif order.status == 'completed' %}
+        {% if not order.review %}
+            <a href="{% url 'leave_review' order.id %}" 
+               style="background: #3182ce; color: white; padding: 6px 12px; text-decoration: none; border-radius: 5px; font-size: 13px; font-weight: bold; display: inline-block;">
+               Навиштани шарҳ ⭐
+            </a>
+        {% else %}
+            <span style="color: #38a169; font-size: 13px; font-weight: bold;">Шумо аллакай баҳо додед ({{ order.review.rating }}★)</span>
+        {% endif %}
+    {% endif %}
+</div>
                 </div>
             {% endfor %}
         </div>
