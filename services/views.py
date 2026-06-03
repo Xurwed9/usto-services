@@ -163,7 +163,7 @@ def create_order(request, pk):
         
     return render(request, 'services/order_form.html', {'service': service})
 
-
+@login_required
 def my_orders(request):
     my_requests = Order.objects.filter(client=request.user).select_related('service__master', 'service__category').order_by('-created_at')
     incoming_orders = Order.objects.filter(service__master=request.user).select_related('client','service').order_by('-created_at')
@@ -171,3 +171,13 @@ def my_orders(request):
         'my_requests': my_requests,
         'incoming_orders': incoming_orders,
     })
+
+
+@login_required
+def cancel_order(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    if order.client == request.user:
+        if order.status == 'pending':
+            order.status='cancel'
+            order.save()
+    return redirect('my_orders')
