@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Category,Service,Order
+from .models import Category,Service,Order,Review
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
@@ -202,3 +202,33 @@ def update_order_status(request, pk, status):
             order.save()
             
     return redirect('my_orders')
+
+
+
+@login_required
+def leave_review(request, order_id):
+    order = get_object_or_404(Order, id=order_id, client=request.user, status='completed')
+    
+    if Review.objects.filter(order=order).exists():
+        return redirect('my_orders')
+
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment', '').strip()
+        
+        if not rating or not comment:
+            return render(request, 'services/leave_review.html', {
+                'order': order,
+                'error': 'Лутфан, баҳо ва шарҳро пурра кунед!'
+            })
+            
+        Review.objects.create(
+            order=order,
+            client=request.user,
+            master=order.service.master,
+            rating=int(rating),
+            comment=comment
+        )
+        return redirect('service_detail', id=order.service.id)
+        
+    return render(request, 'services/leave_review.html', {'order': order})
