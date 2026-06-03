@@ -190,3 +190,33 @@ def edit_profile(request):
         messages.success(request, 'Your profile has been updated successfully!')
         return redirect('profile') 
     return render(request, 'accounts/edit_profile.html')
+
+
+
+
+def forgot_password_request(request):
+    """Корбар эмайлашро менависад ва коди 6-рақама мегирад"""
+    if request.method == "POST":
+        email = request.POST.get('email', '').strip()
+        user = User.objects.filter(email=email).first()
+        
+        if not user:
+            return render(request, 'accounts/forgot_password.html', {'error': 'Корбар бо ин Email ёфт нашуд!'})
+        
+        code = randint(100000, 999999)
+        EmailConfirm.objects.update_or_create(user=user, defaults={'code': code})
+        
+        try:
+            send_mail(
+                subject='Код барои барқарорсозии парол',
+                message=f'Салом {user.username},\n\nКоди шумо барои барқарор кардани парол: {code}\n\nИн кодро дар сайт ворид кунед.',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            print(f"Ошибкаи фиристодан: {e}")
+            
+        return render(request, 'accounts/forgot_password_confirm.html', {'email': email})
+        
+    return render(request, 'accounts/forgot_password.html')
