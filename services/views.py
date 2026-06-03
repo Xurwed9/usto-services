@@ -35,4 +35,7 @@ def create_service(request):
         )
         return redirect('profile')
     else:
-        return render(request, 'services/service_form.html', {'title': 'Иловаи хизматрасонии нав'})
+        categories = Category.objects.all()
+        return render(request, 'services/service_form.html', 
+                      {'title': 'Иловаи хизматрасонии нав',
+                       'categories': categories})
