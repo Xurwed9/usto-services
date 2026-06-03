@@ -6,13 +6,10 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from services.models import Service
+from django.contrib import messages
+
 
 # Create your views here.
-
-from random import randint
-from django.core.mail import send_mail
-from django.conf import settings
-from .models import EmailConfirm
 
 def send_confirmation_email(user):
     code = randint(100000, 999999)
@@ -146,13 +143,9 @@ def my_profile(request):
 
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import User, Profile
 
 @login_required
-def edit_profile_view(request):
+def edit_profile(request):
     user = request.user
     profile = user.profile  
 
