@@ -75,3 +75,28 @@ def create_service(request):
                       {'title': 'Иловаи хизматрасонии нав',
                        'categories': categories})
     
+
+
+@login_required
+def update_service(request, pk):
+    service = get_object_or_404(Service, pk=pk)
+    if service.master != request.user:
+        return redirect('/')
+    if request.method == 'POST':
+        service.title = request.POST.get('title')
+        service.description = request.POST.get('description')
+        service.price = request.POST.get('price')
+        category_id = request.POST.get('category')
+        if category_id:
+            service.category = Category.objects.get(pk=category_id)
+        new_image = request.FILES.get('image')
+        if new_image:
+            service.image = new_image
+        service.save()
+        return redirect('service_list')
+    categories = Category.objects.all()
+    return render(request, 'services/service_form.html', {
+        'service': service,
+        'categories': categories,
+        'title': 'Таҳрири хизматрасонӣ'
+    })
