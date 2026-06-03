@@ -87,6 +87,7 @@
         {% if request.user.is_authenticated %}
             
             {% if request.user.role == 'master' %}
+                <a href="{% url 'create_services' %}" style="color: #28a745; font-weight: bold; text-decoration: none;">+ Иловаи хизматрасонӣ</a>
             {% endif %}
 
             <a href="{% url 'profile' %}" style="text-decoration: none; color: #007bff; font-weight: bold;">Profile ({{ request.user.username }})</a>
