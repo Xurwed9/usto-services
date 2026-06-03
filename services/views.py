@@ -9,6 +9,16 @@ def category_list(request):
     return render(request, 'services/category_list.html', {'categories': categories})
 
 
+def home_page(request):
+    services = Service.objects.all().order_by('-id')
+    categories = Category.objects.all()
+    
+    context = {
+        'services': services,
+        'categories': categories
+    }
+    return render(request, 'services/home.html', context)
+
 def create_service(request):
     if request.user.role!='master':
         return redirect('/')
