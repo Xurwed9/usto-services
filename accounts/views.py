@@ -209,20 +209,21 @@ def forgot_password_request(request):
         try:
             send_mail(
                 subject='Код барои барқарорсозии парол',
-                message=f'Салом {user.username},\n\nКоди шумо барои барқарор кардани парол: {code}\n\nИн кодро дар сайт ворид кунед.',
+                message=f'Салом {user.username},\n\nКоди шумо: {code}',
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[user.email],
                 fail_silently=False,
             )
         except Exception as e:
-            print(f"Ошибкаи фиристодан: {e}")
+            print(f"Ошибка: {e}")
             
-        return render(request, 'accounts/forgot_password_confirm.html', {'email': email})
+        return render(request, 'accounts/forgot_password_confirm.html', {'user_email': email})
         
     return render(request, 'accounts/forgot_password.html')
 
 
 def forgot_password_verify(request):
+    """Корбар код ва пароли навро менависад"""
     if request.method == "POST":
         email = request.POST.get('email')
         code = request.POST.get('code')
@@ -231,19 +232,29 @@ def forgot_password_verify(request):
         
         user = User.objects.filter(email=email).first()
         if not user:
-            return render(request, 'accounts/forgot_password_confirm.html', {'error': 'Хатогӣ рӯй дод!', 'email': email})
+            return render(request, 'accounts/forgot_password_confirm.html', {
+                'error': 'Хатогӣ: Эмайл ёфт нашуд! Аз нав кӯшиш кунед.', 
+                'user_email': email
+            })
             
         if password1 != password2:
-            return render(request, 'accounts/forgot_password_confirm.html', {'error': 'Паролҳо мувофиқат наомаданд!', 'email': email})
+            return render(request, 'accounts/forgot_password_confirm.html', {
+                'error': 'Паролҳо мувофиқат наомаданд!', 
+                'user_email': email
+            })
             
         confirm = EmailConfirm.objects.filter(user=user, code=code).first()
         if not confirm:
-            return render(request, 'accounts/forgot_password_confirm.html', {'error': 'Коди воридшуда хато аст!', 'email': email})
+            return render(request, 'accounts/forgot_password_confirm.html', {
+                'error': 'Коди воридшуда хато аст!', 
+                'last_username': user.username
+            })
             
         user.set_password(password1)
         user.save()
         confirm.delete()
         
-        return render(request, 'accounts/login.html', {'success': 'Пароли шумо бомуваффақият иваз шуд! Ворид шавед.'})
+        return render(request, 'accounts/login.html', {'error': 'Пароли шумо иваз шуд! Акнун ворид шавед.',
+                                                       'last_username': user.username})
         
     return redirect('login')

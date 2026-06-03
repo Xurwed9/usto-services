@@ -1,11 +1,12 @@
- {% extends "accounts/base.html" %}
+{% extends "accounts/base.html" %}
 {% block main %}
 
  <h3> Login </h3>
-    <form action="" method="post">
+    <form action="{% url 'login' %}" method="post">
         {% csrf_token %}
         <label for="username">Username</label> <br>
-        <input type="text" placeholder="enter ur username" name="username" required> <br> <br>
+        <input type="text" placeholder="enter ur username" name="username" value="{{ last_username }}" required> <br> <br>
+        
         <label for="password">password</label> <br>
         <input type="password" placeholder="enter ur password" name="password" required> <br> <br>
       
@@ -15,11 +16,10 @@
         {% endif %}
     </form>
     <div>
-        <p><strong>Dont an account so </strong> <a href="{% url  'register'  %}">Sign Up</a></p>
-        <p><strong>YOu can confirm ur email here </strong> <a href="{% url  'confirm'  %}">Confirm</a></p>
-        <a href="{% url 'password_reset' %}" style="color: #3182ce; text-decoration: none; font-size: 14px;">
-    Паролро фаромӯш кардам? 🔒
-</a>
-
+        <p><strong>Dont an account so </strong> <a href="{% url 'register' %}">Sign Up</a></p>
+        <p><strong>YOu can confirm ur email here </strong> <a href="{% url 'confirm' %}">Confirm</a></p>
+        <a href="{% url 'forgot_password' %}" style="color: #3182ce; text-decoration: none; font-size: 14px;">
+            Паролро фаромӯш кардам? 🔒
+        </a>
     </div>
-{% endblock  %}
+{% endblock %}
