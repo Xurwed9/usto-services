@@ -68,7 +68,7 @@ def create_service(request):
             price=price,
             image=image
         )
-        return redirect('profile')
+        return redirect('service_list')
     else:
         categories = Category.objects.all()
         return render(request, 'services/service_form.html', 
