@@ -19,4 +19,6 @@ urlpatterns = [
     path('order/<int:order_id>/review/', views.leave_review, name='leave_review'),
 
     path('ai-assistant/', views.ai_help, name='ai_help'),
+
+    path('dashboard/admin/', views.admin_dashboard, name='admin_dashboard'),
 ]
