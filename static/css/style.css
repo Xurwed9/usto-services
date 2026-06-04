@@ -3988,3 +3988,247 @@ body {
     color: #2563eb;
     text-decoration: underline;
 }
+
+
+/* ai-chat  */
+/* Контейнери умумии чати AI */
+.ai-chat {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 380px;
+    height: 550px;
+    background: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+/* Саҳифаи чат вақте кушода мешавад */
+.ai-chat--open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+
+/* Қисми Сарлавҳа (Header) */
+.ai-chat__header {
+    padding: 18px 24px;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ai-chat__title {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ai-chat__title-dot {
+    width: 8px;
+    height: 8px;
+    background: #3b82f6;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #3b82f6;
+}
+
+.ai-chat__close {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.ai-chat__close:hover {
+    color: #ffffff;
+}
+
+/* Равзанаи паёмҳо (Чати асосӣ) */
+.ai-chat__window {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    scroll-behavior: smooth;
+}
+
+/* Саломи аввалия */
+.ai-chat__welcome {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    color: #d1d5db;
+    padding: 14px 18px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Паёмҳо: Корбар ва AI */
+.ai-chat__msg {
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.ai-chat__msg--user {
+    background: #2563eb;
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+}
+
+.ai-chat__msg--ai {
+    background: rgba(255, 255, 255, 0.06);
+    color: #f3f4f6;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Панели воридкунии матн (Input Row) */
+.ai-chat__input-row {
+    padding: 15px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.ai-chat__input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px 16px;
+    border-radius: 14px;
+    color: #ffffff;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.ai-chat__input:focus {
+    border-color: #3b82f6;
+}
+
+.ai-chat__send-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.ai-chat__send-btn:hover {
+    background: #3b82f6;
+    transform: scale(1.03);
+}
+
+/* Аниматсияи се нуқтаи чопкунӣ (Typing Animation) */
+.ai-chat__typing {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 4px 0;
+}
+
+.ai-chat__typing span {
+    width: 6px;
+    height: 6px;
+    background: #9ca3af;
+    border-radius: 50%;
+    animation: aiBlurPulse 1.4s infinite ease-in-out both;
+}
+
+.ai-chat__typing span:nth-child(1) { animation-delay: -0.32s; }
+.ai-chat__typing span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes aiBlurPulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+/* Мутобиқшавӣ барои телефонҳо (Респонсив) */
+@media (max-width: 480px) {
+    .ai-chat {
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        border: none;
+    }
+    
+    .ai-chat__close {
+        font-size: 20px;
+        padding: 5px;
+    }
+}
+
+
+
+/* edit-profil */
+.master-extra-zone {
+    margin-top: 15px;
+    padding: 24px;
+    background: rgba(59, 130, 246, 0.03);
+    border: 1px dashed rgba(59, 130, 246, 0.2);
+    border-radius: 16px;
+    box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.02);
+}
+
+.master-zone-title {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #3b82f6;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+}
+
+.form-container .file-upload-zone {
+    border-style: solid;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.form-container .upload-icon {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+@media (max-width: 600px) {
+    .master-extra-zone {
+        padding: 16px;
+    }
+}

@@ -1,77 +1,94 @@
 {% extends "accounts/base.html" %}
 {% block main %}
 
-<div style="max-width: 600px; margin: 40px auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); font-family: sans-serif;">
-    
-    <h2 style="margin-top: 0; color: #2d3748; border-bottom: 2px solid #edf2f7; padding-bottom: 10px;">Edit Profile</h2>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div style="padding: 10px; background: #fed7d7; color: #9b2c2c; margin-bottom: 15px; border-radius: 6px; font-weight: bold;">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
-        {% csrf_token %}
-
-        <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #4a5568;">Profile Picture:</label>
-            <input type="file" name="photo" accept="image/*" style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 6px;">
+<div class="form-wrapper">
+    <div class="form-container auth-box-width">
+        
+        <div class="form-header">
+            <div class="header-icon-glow">👤</div>
+            <h2 class="form-title">Таҳрири профил</h2>
+            <p class="form-subtitle">Маълумоти шахсии худро навсозӣ кунед</p>
         </div>
 
-        <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #4a5568;">Username:</label>
-            <input type="text" name="username" value="{{ request.user.username }}" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;" required>
-        </div>
-
-        <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #4a5568;">Email:</label>
-            <input type="email" name="email" value="{{ request.user.email }}" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;" required>
-        </div>
-
-        <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #4a5568;">Phone Number:</label>
-            <input type="text" name="phone" value="{{ request.user.phone }}" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;">
-        </div>
-
-        <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #4a5568;">Age:</label>
-            <input type="number" name="age" value="{{ request.user.age|default:'' }}" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;">
-        </div>
-
-        <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #4a5568;">City:</label>
-            <input type="text" name="city" value="{{ request.user.profile.city|default:'' }}" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;">
-        </div>
-
-        {% if request.user.role == 'master' %}
-            <div style="border-top: 2px dashed #edf2f7; padding-top: 15px; margin-top: 10px;">
-                <h4 style="margin: 0 0 15px 0; color: #319795;">Master Extra Info</h4>
-                
-                <div style="margin-bottom: 15px;">
-                    <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #4a5568;">Experience (in years):</label>
-                    <input type="number" name="experience" value="{{ request.user.profile.experience }}" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="error-alert">
+                    <span class="error-icon">⚠️</span>
+                    <span class="error-text">{{ message }}</span>
                 </div>
-
-                <div>
-                    <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #4a5568;">About Me (Bio):</label>
-                    <textarea name="bio" rows="4" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;">{{ request.user.profile.bio|default:'' }}</textarea>
-                </div>
-            </div>
+            {% endfor %}
         {% endif %}
 
-        <div style="display: flex; gap: 15px; margin-top: 15px;">
-            <button type="submit" style="flex: 1; background: #319795; color: white; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer;">
-                Save Changes
-            </button>
-            <a href="{% url 'profile' %}" style="flex: 1; text-align: center; background: #718096; color: white; padding: 12px; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: bold;">
-                Cancel
-            </a>
-        </div>
+        <form method="POST" enctype="multipart/form-data" class="form-grid">
+            {% csrf_token %}
 
-    </form>
+            <div class="form-group">
+                <label class="form-group-label">Расми профил (Аватар)</label>
+                <div class="file-upload-zone" style="padding: 15px;">
+                    <div class="upload-zone-content">
+                        <div class="upload-icon">📸</div>
+                        <input type="file" name="photo" id="profile-photo-input" accept="image/*">
+                        <label for="profile-photo-input" class="file-custom-label">
+                            <span>Расми навро интихоб кунед</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-group-label">Номи корбарӣ (Username)</label>
+                <input type="text" name="username" value="{{ request.user.username }}" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-group-label">Почтаи электронӣ (Email)</label>
+                <input type="email" name="email" value="{{ request.user.email }}" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-group-label">Рақами телефон</label>
+                <input type="text" name="phone" value="{{ request.user.phone|default:'' }}" placeholder="+992 900 00 0000">
+            </div>
+
+            <div class="form-row-two-col">
+                <div class="form-group flex-1">
+                    <label class="form-group-label">Синну сол</label>
+                    <input type="number" name="age" value="{{ request.user.age|default:'' }}" placeholder="Масалан: 25">
+                </div>
+
+                <div class="form-group flex-1">
+                    <label class="form-group-label">Шаҳр</label>
+                    <input type="text" name="city" value="{{ request.user.profile.city|default:'' }}" placeholder="Душанбе">
+                </div>
+            </div>
+
+            {% if request.user.role == 'master' %}
+                <div class="master-extra-zone">
+                    <h4 class="master-zone-title">Маълумоти иловагии усто 🛠️</h4>
+                    
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label class="form-group-label">Таҷрибаи корӣ (бо сол)</label>
+                        <input type="number" name="experience" value="{{ request.user.profile.experience|default:'' }}" placeholder="Масалан: 5">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-group-label">Дар бораи ман (Bio)</label>
+                        <textarea name="bio" rows="4" placeholder="Дар бораи маҳорат ва хизматрасониҳои худ кӯтоҳ нависед...">{{ request.user.profile.bio|default:'' }}</textarea>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="action-buttons-wrapper">
+                <button type="submit" class="btn-submit">
+                    <span class="btn-text">Сабт кардан ✨</span>
+                </button>
+                <a href="{% url 'profile' %}" class="btn-cancel">
+                    <span>Бекор кардан</span>
+                </a>
+            </div>
+
+        </form>
+    </div>
 </div>
 
 {% endblock %}

@@ -259,7 +259,7 @@ def leave_review(request, order_id):
 
 def ai_help(request):
     client = Groq(api_key=settings.GROQ_API_KEY)
-    prompt = request.GET.get('promt', '').strip()
+    prompt = request.GET.get('prompt', '').strip()
     ai_answer = ""
 
     db_services = Service.objects.all()[:10] 

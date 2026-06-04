@@ -26,10 +26,10 @@
         <div class="nav__links">
             {% if request.user.is_authenticated %}
                 {% if request.user.is_superuser or request.user.is_staff %}
-            <a href="{% url 'admin_dashboard' %}" class="nav__link" style="color: var(--accent); font-weight: 700; background: var(--accent-surface); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid rgba(217, 70, 239, 0.2);">
-            📊 Панели Админ
-            </a>
-            {% endif %}
+                    <a href="{% url 'admin_dashboard' %}" class="nav__link" style="color: var(--accent); font-weight: 700; background: var(--accent-surface); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid rgba(217, 70, 239, 0.2);">
+                        📊 Панели Админ
+                    </a>
+                {% endif %}
 
                 <div class="dropdown">
                     <button class="dropdown__trigger">
@@ -82,35 +82,10 @@
     </nav>
 
     {% if query %}
-    <div class="search-result-bar">
-        Натиҷа барои: <strong>"{{ query }}"</strong> — {{ services.count }} эълон ёфт шуд
-    </div>
+        <div class="search-result-bar">
+            Натиҷа барои: <strong>"{{ query }}"</strong> — {{ services.count }} эълон ёфт шуд
+        </div>
     {% endif %}
-
-    <div class="ai-chat" id="aiChatBox">
-        <div class="ai-chat__header">
-            <div class="ai-chat__title">
-                <span class="ai-chat__title-dot"></span>
-                TajService AI
-            </div>
-            <button class="ai-chat__close" id="closeAiBtn" aria-label="Close AI chat">✕</button>
-        </div>
-
-        <div class="ai-chat__window" id="chatWindow">
-            <div class="ai-chat__welcome">
-                Салом! Ман ёварии ҳушманди TajService ҳастам. Чӣ кӯмак карда метавонам? ✦
-            </div>
-        </div>
-
-        <div class="ai-chat__input-row">
-            <input type="text" id="aiInput" placeholder="Савол нависед..." class="ai-chat__input" aria-label="AI question input">
-            <button id="sendAiBtn" class="ai-chat__send-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="m22 2-7 20-4-9-9-4 20-7z"/>
-                </svg>
-            </button>
-        </div>
-    </div>
 </header>
 
 {% block main %}
@@ -120,9 +95,34 @@
 <footer class="site-footer">
     <div class="site-footer__inner">
         <span class="site-footer__brand">TajService</span>
-        <span class="site-footer__copy">© 2025 Ҳамаи ҳуқуқҳо ҳифз шудаанд</span>
+        <span class="site-footer__copy">© 2026 Ҳамаи ҳуқуқҳо ҳифз шудаанд</span>
     </div>
 </footer>
+
+<div class="ai-chat" id="aiChatBox">
+    <div class="ai-chat__header">
+        <div class="ai-chat__title">
+            <span class="ai-chat__title-dot"></span>
+            TajService AI
+        </div>
+        <button class="ai-chat__close" id="closeAiBtn" aria-label="Close AI chat">✕</button>
+    </div>
+
+    <div class="ai-chat__window" id="chatWindow">
+        <div class="ai-chat__welcome">
+            Салом! Ман ёварии ҳушманди TajService ҳастам. Чӣ кӯмак карда метавонам? ✦
+        </div>
+    </div>
+
+    <div class="ai-chat__input-row">
+        <input type="text" id="aiInput" placeholder="Савол нависед..." class="ai-chat__input" aria-label="AI question input">
+        <button id="sendAiBtn" class="ai-chat__send-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="m22 2-7 20-4-9-9-4 20-7z"/>
+            </svg>
+        </button>
+    </div>
+</div>
 
 <script>
     const openBtn = document.getElementById('openAiBtn');
@@ -138,6 +138,13 @@
     };
     closeBtn.onclick = () => chatBox.classList.remove('ai-chat--open');
 
+    function formatAiResponse(text) {
+        if (!text) return '';
+        let formatted = text.replace(/\n/g, '<br>');
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        return formatted;
+    }
+
     async function sendQuestion() {
         const text = aiInput.value.trim();
         if (!text) return;
@@ -147,17 +154,32 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         const loadingId = 'loading-' + Date.now();
-        chatWindow.innerHTML += `<div class="ai-chat__msg ai-chat__msg--ai" id="${loadingId}"><span class="ai-chat__typing"><span></span><span></span><span></span></span></div>`;
+        chatWindow.innerHTML += `
+            <div class="ai-chat__msg ai-chat__msg--ai" id="${loadingId}">
+                <div class="ai-chat__typing">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>`;
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         try {
-            const response = await fetch(`{% url 'ai_help' %}?promt=${encodeURIComponent(text)}`, {
+            const response = await fetch(`{% url 'ai_help' %}?prompt=${encodeURIComponent(text)}`, {
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
+            
+            if (!response.ok) throw new Error('Сервер ҷавоб надод');
+            
             const data = await response.json();
-            document.getElementById(loadingId).innerHTML = data.ai_answer;
+            const aiBlock = document.getElementById(loadingId);
+            
+            if (aiBlock) {
+                aiBlock.innerHTML = formatAiResponse(data.ai_answer);
+            }
         } catch (error) {
-            document.getElementById(loadingId).textContent = '⚠️ Хатогӣ дар пайвастшавӣ.';
+            const aiBlock = document.getElementById(loadingId);
+            if (aiBlock) {
+                aiBlock.innerHTML = '<span style="color: #ef4444;">⚠️ Хатогӣ дар пайвастшавӣ ё сервер.</span>';
+            }
         }
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
