@@ -25,6 +25,11 @@
 
         <div class="nav__links">
             {% if request.user.is_authenticated %}
+                {% if request.user.is_superuser or request.user.is_staff %}
+            <a href="{% url 'admin_dashboard' %}" class="nav__link" style="color: var(--accent); font-weight: 700; background: var(--accent-surface); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid rgba(217, 70, 239, 0.2);">
+            📊 Панели Админ
+            </a>
+            {% endif %}
 
                 <div class="dropdown">
                     <button class="dropdown__trigger">
