@@ -68,48 +68,120 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav style="display: flex; align-items: center; gap: 20px; padding: 10px 20px; background: #fff; border-bottom: 1px solid #ddd;">
-    <a href="/" style="font-weight: bold; text-decoration: none; color: #333; font-size: 20px;">TajService</a>
+ <header>
+    <nav style="display: flex; align-items: center; gap: 20px; padding: 10px 20px; background: #fff; border-bottom: 1px solid #ddd;">
+        <a href="/" style="font-weight: bold; text-decoration: none; color: #333; font-size: 20px;">TajService</a>
 
-    <div style="margin-left: auto; display: flex; gap: 15px; align-items: center;">
-        {% if request.user.is_authenticated %}
-             <div class="dropdown">
-        <button class="dropbtn">Categories ▼</button>
-        <div class="dropdown-content">
-            {% for cat in categories %}
-                <a href="/services/category/{{ cat.slug }}/">{{ cat.name }}</a>
-            {% empty %}
-                <a href="#">No categories</a>
-            {% endfor %}
+        <button id="openAiBtn" style="background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 2px 4px rgba(37,99,235,0.2);">
+            <span>🤖</span> Аз AI пурсидан
+        </button>
 
+        <div style="margin-left: auto; display: flex; gap: 15px; align-items: center;">
+            {% if request.user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="dropbtn">Categories ▼</button>
+                    <div class="dropdown-content">
+                        {% for cat in categories %}
+                            <a href="/services/category/{{ cat.slug }}/">{{ cat.name }}</a>
+                        {% empty %}
+                            <a href="#">No categories</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <a href="{% url 'my_orders' %}">my orders</a>
+                
+                {% if request.user.role == 'master' %}
+                    <a href="{% url 'create_services' %}" style="color: #28a745; font-weight: bold; text-decoration: none;">+ Иловаи хизматрасонӣ</a>
+                {% endif %}
+
+                <a href="{% url 'profile' %}" style="text-decoration: none; color: #007bff; font-weight: bold;">Profile ({{ request.user.username }})</a>
+                <a href="{% url 'logout' %}" style="text-decoration: none; color: #dc3545;">logout</a>
+                
+            {% else %}
+                <a href="{% url 'register' %}" style="text-decoration: none; color: #333;">register</a>
+                <a href="{% url 'login' %}" style="text-decoration: none; color: #333;">login</a>
+            {% endif %}
+        </div>
+
+        <form action="{% url 'service_search' %}" method="GET" style="margin: 0;">
+            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="search">
+            <button type="submit">Search</button>
+        </form>
+    </nav>
+
+    {% if query %}
+        <p style="text-align: center; color: #4a5568; margin-top: 10px;">
+            Натиҷаи ҷустуҷӯ барои: <strong>"{{ query }}"</strong> ({{ services.count }} эълон ёфт шуд)
+        </p>
+    {% endif %}
+
+    <div id="aiChatBox" style="display: none; background: #ffffff; padding: 20px; border-radius: 16px; margin: 15px auto; max-width: 600px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); position: relative; animation: slideDown 0.3s ease;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="color: #1e3a8a; margin: 0; display: flex; align-items: center; gap: 8px;">🚀 TajService AI Chat</h3>
+            <button id="closeAiBtn" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #94a3b8;">&times;</button>
+        </div>
+
+        <div id="chatWindow" style="max-height: 250px; overflow-y: auto; padding: 10px; background: #f8fafc; border-radius: 10px; margin-bottom: 15px; border: 1px solid #f1f5f9;">
+            <p style="margin: 5px 0; color: #64748b; font-size: 14px; text-align: center;">Салом! Ман ёварӣ интеллектуалӣ. Чӣ кӯмак кунам? 😊</p>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="aiInput" placeholder="Саволи худро нависед..." style="flex-grow: 1; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e0; font-size: 14px; outline: none;">
+            <button id="sendAiBtn" style="background: #2563eb; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; cursor: pointer;">Фиристодан</button>
         </div>
     </div>
-                <a href="{% url 'my_orders' %}">my orders</a>
-            {% if request.user.role == 'master' %}
-                <a href="{% url 'create_services' %}" style="color: #28a745; font-weight: bold; text-decoration: none;">+ Иловаи хизматрасонӣ</a>
-            {% endif %}
+</header>
 
-            <a href="{% url 'profile' %}" style="text-decoration: none; color: #007bff; font-weight: bold;">Profile ({{ request.user.username }})</a>
+<style>
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .user-msg { background: #e0f2fe; color: #0369a1; padding: 8px 12px; border-radius: 12px; margin: 8px 0 8px auto; max-width: 80%; text-align: right; }
+    .ai-msg { background: #f1f5f9; color: #334155; padding: 8px 12px; border-radius: 12px; margin: 8px auto 8px 0; max-width: 80%; line-height: 1.5; white-space: pre-line; }
+</style>
+
+<script>
+    const openBtn = document.getElementById('openAiBtn');
+    const closeBtn = document.getElementById('closeAiBtn');
+    const chatBox = document.getElementById('aiChatBox');
+    const sendBtn = document.getElementById('sendAiBtn');
+    const aiInput = document.getElementById('aiInput');
+    const chatWindow = document.getElementById('chatWindow');
+
+    openBtn.onclick = () => { chatBox.style.display = chatBox.style.display === 'none' ? 'block' : 'none'; };
+    closeBtn.onclick = () => { chatBox.style.display = 'none'; };
+
+    async function sendQuestion() {
+        const text = aiInput.value.trim();
+        if (!text) return;
+
+        chatWindow.innerHTML += `<div class="user-msg"><b>Шумо:</b> ${text}</div>`;
+        aiInput.value = '';
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        const loadingId = 'loading-' + Date.now();
+        chatWindow.innerHTML += `<div class="ai-msg" id="${loadingId}">🤔 AI дар ҳоли фикр кардан...</div>`;
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        try {
+            const response = await fetch(`/services/ai-assistant/?promt=${encodeURIComponent(text)}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await response.json();
             
-            <a href="{% url 'logout' %}" style="text-decoration: none; color: #dc3545;">logout</a>
-            
-        {% else %}
-            <a href="{% url 'register' %}" style="text-decoration: none; color: #333;">register</a>
-            <a href="{% url 'login' %}" style="text-decoration: none; color: #333;">login</a>
-        {% endif %}
-    </div>
-    <form action="{% url 'service_search' %}" method="GET">
-        <input type="text" name="q" value="{{ query|default:''}}" placeholder="search">
-        <button type="submit">Search</button>
-    </form>
-    {% if query %}
-        <p style="text-align: center; color: #4a5568;">
-        Натиҷаи ҷустуҷӯ барои: <strong>"{{ query }}"</strong> ({{ services.count }} эълон ёфт шуд)
-    </p>
-    {% endif %}
-</nav>
-    </header>
+            document.getElementById(loadingId).innerHTML = `<b>🤖 AI:</b> ${data.ai_answer}`;
+        } catch (error) {
+            document.getElementById(loadingId).innerText = '⚠️ Хатогӣ дар пайвастшавӣ.';
+        }
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    sendBtn.onclick = sendQuestion;
+    aiInput.onkeypress = (e) => { if(e.key === 'Enter') sendQuestion(); };
+</script>
 
     {% block main %}
         <h2>block main</h2>
