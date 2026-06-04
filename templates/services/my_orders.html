@@ -1,46 +1,38 @@
 {% extends 'accounts/base.html' %}
 
 {% block main %}
-<div style="max-width: 1000px; margin: 20px auto; padding: 20px;">
-    <h2 style="border-bottom: 2px solid #38a169; padding-bottom: 10px; color: #2d3748;">📥 Заказҳои омада (ба ман)</h2>
+<div class="orders-dashboard">
+    <h2 class="section-headline section-headline--incoming">📥 Заказҳои омада (ба ман)</h2>
     {% if incoming_orders %}
-        <div style="display: grid; gap: 15px; margin-bottom: 40px; margin-top: 20px;">
+        <div class="orders-grid">
             {% for order in incoming_orders %}
-                <div style="border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; background: #f0fff4;">
-                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div class="order-premium-card order-premium-card--incoming">
+                    <div class="order-card-header">
                         <div>
-                            <h4 style="margin: 0;">Хизматрасонӣ: {{ order.service.title }}</h4>
-                            <p style="margin: 5px 0;"><strong>Мизоҷ:</strong> {{ order.client.username }}</p>
-                            <p style="margin: 5px 0;"><strong>Суроға:</strong> {{ order.address }}</p>
-                            <p style="margin: 5px 0; font-style: italic;">"{{ order.description }}"</p>
+                            <h4 class="order-service-title">Хизматрасонӣ: {{ order.service.title }}</h4>
+                            <p class="order-meta-text"><strong>Мизоҷ:</strong> {{ order.client.username }}</p>
+                            <p class="order-meta-text"><strong>Суроға:</strong> {{ order.address }}</p>
+                            <p class="order-description-quote">"{{ order.description }}"</p>
                         </div>
-                        <span style="padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; 
-                            {% if order.status == 'pending' %} background: #feebc8; color: #c05621;
-                            {% elif order.status == 'accepted' %} background: #c6f6d5; color: #22543d;
-                            {% elif order.status == 'canceled' %} background: #fed7d7; color: #9b2c2c;
-                            {% else %} background: #edf2f7; color: #4a5568; {% endif %}">
+                        <span class="status-badge {% if order.status == 'pending' %}status-badge--pending{% elif order.status == 'accepted' %}status-badge--accepted{% elif order.status == 'canceled' %}status-badge--canceled{% else %}status-badge--completed{% endif %}">
                             {{ order.get_status_display }}
                         </span>
                     </div>
 
-                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                    <div class="order-card-actions">
                         {% if order.status == 'pending' %}
-                            <a href="{% url 'update_order_status' order.pk 'accepted' %}" 
-                               style="background: #38a169; color: white; padding: 8px 15px; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: bold;">
-                               Қабул кардан ✅
+                            <a href="{% url 'update_order_status' order.pk 'accepted' %}" class="btn-action btn-action--accept">
+                                Қабул кардан ✅
                             </a>
-                            <a href="{% url 'update_order_status' order.pk 'canceled' %}" 
-                               style="background: #e53e3e; color: white; padding: 8px 15px; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: bold;">
-                               Рад кардан ❌
+                            <a href="{% url 'update_order_status' order.pk 'canceled' %}" class="btn-action btn-action--reject">
+                                Рад кардан ❌
                             </a>
                         {% elif order.status == 'accepted' %}
-                            <a href="{% url 'update_order_status' order.pk 'completed' %}" 
-                               style="background: #3182ce; color: white; padding: 8px 15px; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: bold;">
-                               Кор тамом шуд 🏁
+                            <a href="{% url 'update_order_status' order.pk 'completed' %}" class="btn-action btn-action--complete">
+                                Кор тамом шуд 🏁
                             </a>
-                            <a href="{% url 'update_order_status' order.pk 'canceled' %}" 
-                               style="background: #718096; color: white; padding: 8px 15px; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: bold;">
-                               Бекор кардан
+                            <a href="{% url 'update_order_status' order.pk 'canceled' %}" class="btn-action btn-action--neutral">
+                                Бекор кардан
                             </a>
                         {% endif %}
                     </div>
@@ -48,56 +40,49 @@
             {% endfor %}
         </div>
     {% else %}
-        <p style="color: #a0aec0; margin-bottom: 40px;">Ҳоло заказҳои нав нест.</p>
+        <p class="empty-dashboard-msg">Ҳоло заказҳои нав нест.</p>
     {% endif %}
-    <h2 style="border-bottom: 2px solid #3182ce; padding-bottom: 10px; color: #2d3748;">📤 Заказҳои ман (ба дигарон)</h2>
+
+    <h2 class="section-headline section-headline--outgoing">📤 Заказҳои ман (ба дигарон)</h2>
     {% if my_requests %}
-        <div style="display: grid; gap: 15px; margin-top: 20px;">
+        <div class="orders-grid">
             {% for order in my_requests %}
-                <div style="border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; background: white;">
-                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div class="order-premium-card order-premium-card--outgoing">
+                    <div class="order-card-header">
                         <div>
-                            <h4 style="margin: 0;">{{ order.service.title }}</h4>
-                            <p style="margin: 5px 0;"><strong>Усто:</strong> {{ order.service.master.username }}</p>
-                            <small style="color: #a0aec0;">Сана: {{ order.created_at|date:"d.m.Y H:i" }}</small>
+                            <h4 class="order-service-title">{{ order.service.title }}</h4>
+                            <p class="order-meta-text"><strong>Усто:</strong> {{ order.service.master.username }}</p>
+                            <small class="order-timestamp">Сана: {{ order.created_at|date:"d.m.Y H:i" }}</small>
                         </div>
-                        <div>
-                             <span style="padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold;
-                                {% if order.status == 'pending' %} background: #feebc8; color: #c05621;
-                                {% elif order.status == 'accepted' %} background: #c6f6d5; color: #22543d;
-                                {% elif order.status == 'canceled' %} background: #fed7d7; color: #9b2c2c;
-                                {% else %} background: #ebf8ff; color: #2b6cb0; {% endif %}">
-                                {{ order.get_status_display }}
-                             </span>
-                        </div>
+                        <span class="status-badge {% if order.status == 'pending' %}status-badge--pending{% elif order.status == 'accepted' %}status-badge--accepted{% elif order.status == 'canceled' %}status-badge--canceled{% else %}status-badge--completed{% endif %}">
+                            {{ order.get_status_display }}
+                        </span>
                     </div>
 
-                    <div style="margin-top: 15px;">
-    {% if order.status == 'pending' %}
-        <a href="{% url 'cancel_order' order.pk %}" 
-           onclick="return confirm('Оё шумо дар ҳақиқат мехоҳед ин фармоишро бекор кунед?');"
-           style="background: #e53e3e; color: white; padding: 6px 12px; text-decoration: none; border-radius: 5px; font-size: 13px; font-weight: bold; display: inline-block;">
-           Бекор кардани заказ ❌
-        </a>
-    {% elif order.status == 'canceled' %}
-        <span style="color: #e53e3e; font-size: 13px; font-weight: bold;">Шумо ин заказро бекор кардед</span>
-    {% elif order.status == 'completed' %}
-        {% if not order.review %}
-            <a href="{% url 'leave_review' order.id %}" 
-               style="background: #3182ce; color: white; padding: 6px 12px; text-decoration: none; border-radius: 5px; font-size: 13px; font-weight: bold; display: inline-block;">
-               Навиштани шарҳ ⭐
-            </a>
-        {% else %}
-            <span style="color: #38a169; font-size: 13px; font-weight: bold;">Шумо аллакай баҳо додед ({{ order.review.rating }}★)</span>
-        {% endif %}
-    {% endif %}
-</div>
+                    <div class="order-card-actions">
+                        {% if order.status == 'pending' %}
+                            <a href="{% url 'cancel_order' order.pk %}" 
+                               onclick="return confirm('Оё шумо дар ҳақиқат мехоҳед ин фармоишро бекор кунед?');"
+                               class="btn-action btn-action--reject">
+                               Бекор кардани заказ ❌
+                            </a>
+                        {% elif order.status == 'canceled' %}
+                            <span class="status-static-msg status-static-msg--danger">Шумо ин заказро бекор кардед</span>
+                        {% elif order.status == 'completed' %}
+                            {% if not order.review %}
+                                <a href="{% url 'leave_review' order.id %}" class="btn-action btn-action--complete">
+                                   Навиштани шарҳ ⭐
+                                </a>
+                            {% else %}
+                                <span class="status-static-msg status-static-msg--success">Шумо аллакай баҳо додед ({{ order.review.rating }}★)</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             {% endfor %}
         </div>
     {% else %}
-        <p style="color: #a0aec0;">Шумо ҳанӯз чизе заказ накардаед.</p>
+        <p class="empty-dashboard-msg">Шумо ҳанӯз чизе заказ накардаед.</p>
     {% endif %}
-
 </div>
 {% endblock %}
