@@ -167,8 +167,7 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         try {
-            const response = await fetch(`/services/ai-assistant/?promt=${encodeURIComponent(text)}`, {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            const response = await fetch(`{% url 'ai_help' %}?promt=${encodeURIComponent(text)}`, {                headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
             const data = await response.json();
             
