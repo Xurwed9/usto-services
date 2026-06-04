@@ -1,15 +1,15 @@
 {% extends 'accounts/base.html' %}
 
 {% block main %}
-<div style="max-width: 600px; margin: 40px auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+<div class="order-container">
     
-    <h2 style="color: #2d3748; text-align: center; margin-bottom: 10px;">Фармоиши хизматрасонӣ</h2>
-    <p style="text-align: center; color: #718096; margin-bottom: 25px;">
+    <h2 class="order-title">Фармоиши хизматрасонӣ</h2>
+    <p class="order-subtitle">
         Шумо хизматрасонии <strong>"{{ service.title }}"</strong>-ро аз усто <strong>{{ service.master.username }}</strong> фармоиш дода истодаед.
     </p>
 
     {% if error %}
-        <div style="background: #fff5f5; color: #c53030; padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #feb2b2;">
+        <div class="error-card">
             {{ error }}
         </div>
     {% endif %}
@@ -17,27 +17,21 @@
     <form method="POST">
         {% csrf_token %}
         
-        <div style="margin-bottom: 20px;">
-            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #4a5568;">Тавсифи кор / Мушкилии шумо:</label>
-            <textarea name="description" rows="4" placeholder="Масалан: Кран вайрон шудааст, об чакида истодааст..." 
-                      style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px; outline: none; transition: border 0.2s;" 
-                      required></textarea>
+        <div class="form-block">
+            <label class="field-label">Тавсифи кор / Мушкилии шумо:</label>
+            <textarea name="description" class="input-textarea" rows="4" placeholder="Масалан: Кран вайрон шудааст, об чакида истодааст..." required></textarea>
         </div>
 
-        <div style="margin-bottom: 25px;">
-            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #4a5568;">Суроғаи шумо:</label>
-            <input type="text" name="address" placeholder="Масалан: кӯчаи Рӯдакӣ 15, хонаи 10" 
-                   style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px; outline: none;" 
-                   required>
+        <div class="form-block">
+            <label class="field-label">Суроғаи шумо:</label>
+            <input type="text" name="address" class="input-text" placeholder="Масалан: кӯчаи Рӯдакӣ 15, хонаи 10" required>
         </div>
 
-        <div style="display: flex; gap: 10px;">
-            <a href="{% url 'service_detail' service.id %}" 
-               style="flex: 1; text-align: center; padding: 12px; background: #edf2f7; color: #4a5568; text-decoration: none; border-radius: 8px; font-weight: bold;">
+        <div class="buttons-group">
+            <a href="{% url 'service_detail' service.id %}" class="btn-order-cancel">
                 Бекор кардан
             </a>
-            <button type="submit" 
-                    style="flex: 2; padding: 12px; background: #38a169; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;">
+            <button type="submit" class="btn-order-submit">
                 Тасдиқи заказ ✅
             </button>
         </div>
