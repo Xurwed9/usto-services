@@ -4371,3 +4371,47 @@ body {
 .radio-custom-label input[type="radio"]:checked ~ .radio-text {
     color: #ffffff;
 }
+
+
+
+
+/* forgot-password-confirm */
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+    padding-right: 45px !important;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    background: none !important;
+    border: none !important;
+    color: #9ca3af !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    font-size: 16px;
+    user-select: none;
+    z-index: 10;
+}
+
+.password-toggle-btn:hover {
+    color: #ffffff !important;
+}
+
+#code {
+    text-align: center;
+    font-size: 20px !important;
+    letter-spacing: 6px;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+}
