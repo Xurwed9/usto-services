@@ -1,99 +1,131 @@
 {% extends "accounts/base.html" %}
 {% block main %}
 
-<div class="profile-container" style="max-width: 1000px; margin: 40px auto; padding: 20px; font-family: sans-serif; display: flex; gap: 30px; flex-wrap: wrap;">
+<div class="profile-page">
 
-    <div style="flex: 1; min-width: 320px; border: 1px solid #e2e8f0; padding: 25px; border-radius: 12px; background: #fff; height: fit-content; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-        
-        <h2 style="margin-top: 0; color: #2d3748;">My Profile</h2>
+  <div class="profile-grid">
 
-        <div style="text-align: center; margin-bottom: 20px;">
-            {% if request.user.profile.photo %}
-                <img src="{{ request.user.profile.photo.url }}" style="width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 3px solid #319795;">
-            {% else %}
-                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" style="width: 130px; height: 130px; border-radius: 50%;">
-            {% endif %}
-        </div>
+    <aside class="profile-card">
 
-        <div class="profile-info" style="display: flex; flex-direction: column; gap: 12px;">
-            <p><span style="font-weight: bold; color: #4a5568;">Username:</span> {{ request.user.username }}</p>
-            <p><span style="font-weight: bold; color: #4a5568;">Email:</span> {{ request.user.email }}</p>
-            <p><span style="font-weight: bold; color: #4a5568;">Phone:</span> {{ request.user.phone|default:"No Phone" }}</p>
-            <p><span style="font-weight: bold; color: #4a5568;">Age:</span> {{ request.user.age|default:"—" }}</p>
-            <p><span style="font-weight: bold; color: #4a5568;">City:</span> {{ request.user.profile.city|default:"—" }}</p>
-            
-            <p>
-                <span style="font-weight: bold; color: #4a5568;">Role:</span>
-                {% if request.user.role == 'master' %}
-                    <span style="background: #c6f6d5; color: #22543d; padding: 3px 8px; border-radius: 10px; font-size: 14px; font-weight: bold;">Master 🛠️</span>
-                {% else %}
-                    <span style="background: #ebf8ff; color: #2b6cb0; padding: 3px 8px; border-radius: 10px; font-size: 14px; font-weight: bold;">Client 👤</span>
-                {% endif %}
-            </p>
-        </div>
-
-        <a href="{% url 'edit_profile' %}" class="edit-btn" style="display: block; text-align: center; background: #3182ce; color: white; padding: 10px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 20px;">
-            Edit Profile
-        </a>
-    </div>
-
-    <div style="flex: 2; min-width: 450px; border: 1px solid #e2e8f0; padding: 25px; border-radius: 12px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-        
-        {% if request.user.role == 'master' %}
-            <h3 style="margin-top: 0; color: #2d3748; border-bottom: 2px solid #edf2f7; padding-bottom: 10px;">Master Information</h3>
-            
-            <div style="margin-bottom: 25px; background: #f7fafc; padding: 15px; border-radius: 8px;">
-                <p style="margin: 5px 0;"><span style="font-weight: bold;">Experience:</span> {{ request.user.profile.experience }} years</p>
-                <p style="margin: 5px 0;"><span style="font-weight: bold;">Rating:</span> ⭐ {{ request.user.profile.rating }} / 5.0</p>
-                <p style="margin: 5px 0;"><span style="font-weight: bold;">About Me (Bio):</span></p>
-                <p style="color: #4a5568; font-style: italic; margin: 5px 0 0 0;">{{ request.user.profile.bio|default:"No bio written yet." }}</p>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #edf2f7; padding-bottom: 10px;">
-                <h3 style="margin: 0; color: #2d3748;">My Active Services</h3>
-                <a href="{% url 'create_services' %}" style="background: #319795; color: white; padding: 6px 12px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: bold;">+ New Service</a>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
-                {% for service in my_services %}
-                    <div style="border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; background: #f7fafc;">
-                        <div>
-                            <h4 style="margin: 0 0 5px 0; color: #2d3748;">{{ service.title }}</h4>
-                            <span style="color: #319795; font-weight: bold;">{{ service.price }} TJS</span>
-                        </div>
-                        {% if service.master == request.user %}
-    <div style="display: flex; gap: 15px; margin-top: 10px;">
-        <a href="{% url 'update_service' service.id %}" style="color: #3182ce; text-decoration: none; font-weight: bold; font-size: 14px;">
-            Edit 📝
-        </a>
-        
-        <a href="{% url 'delete_service' service.id %}" 
-           onclick="return confirm('Оё шумо дар ҳақиқат мехоҳед ин хизматрасониро нест кунед?');" 
-           style="color: #e53e3e; text-decoration: none; font-weight: bold; font-size: 14px;">
-            Delete ❌
-        </a>
-        <a href="{% url 'toggle_service_status' service.pk %}" 
-           style="padding: 5px 10px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; 
-                  {% if service.is_active %} background-color: #feebc8; color: #c05621; {% else %} background-color: #c6f6d5; color: #22543d; {% endif %}">
-            {% if service.is_active %} Пинҳон кардан 👁️‍🗨️ {% else %} Фаъол кардан ✅ {% endif %}
-        </a>
-    </div>
-{% endif %}
-                    </div>
-                {% empty %}
-                    <p style="color: #718096; text-align: center; padding: 20px;">You haven't added any services yet.</p>
-                {% endfor %}
-            </div>
-
+      <div class="profile-card__avatar-wrap">
+        {% if request.user.profile.photo %}
+          <img src="{{ request.user.profile.photo.url }}" class="profile-card__avatar" alt="avatar">
         {% else %}
-            <h3 style="margin-top: 0; color: #2d3748; border-bottom: 2px solid #edf2f7; padding-bottom: 10px;">My Orders</h3>
-            <div style="text-align: center; padding: 5px 0; color: #718096; font-style: italic;">
-                <p>You are logged in as a **Client**. Here you will see the history of your orders once the order system is built.</p>
-            </div>
+          <div class="profile-card__avatar-placeholder">
+            {{ request.user.username|first|upper }}
+          </div>
+        {% endif %}
+        <div class="profile-card__avatar-ring"></div>
+      </div>
+
+      <h2 class="profile-card__name">{{ request.user.username }}</h2>
+
+      <div class="profile-card__role">
+        {% if request.user.role == 'master' %}
+          <span class="role-badge role-badge--master">🛠️ Master</span>
+        {% else %}
+          <span class="role-badge role-badge--client">👤 Client</span>
+        {% endif %}
+      </div>
+
+      <div class="profile-info">
+        <div class="profile-info__item">
+          <span class="profile-info__label">Email</span>
+          <span class="profile-info__value">{{ request.user.email }}</span>
+        </div>
+        <div class="profile-info__item">
+          <span class="profile-info__label">Phone</span>
+          <span class="profile-info__value">{{ request.user.phone|default:"—" }}</span>
+        </div>
+        <div class="profile-info__item">
+          <span class="profile-info__label">Age</span>
+          <span class="profile-info__value">{{ request.user.age|default:"—" }}</span>
+        </div>
+        <div class="profile-info__item">
+          <span class="profile-info__label">City</span>
+          <span class="profile-info__value">{{ request.user.profile.city|default:"—" }}</span>
+        </div>
+      </div>
+
+      <a href="{% url 'edit_profile' %}" class="profile-edit-btn">
+        Edit Profile
+      </a>
+
+    </aside>
+
+    <main class="profile-main">
+
+      {% if request.user.role == 'master' %}
+
+        <div class="master-stats">
+          <div class="master-stat">
+            <span class="master-stat__value">{{ request.user.profile.experience }}</span>
+            <span class="master-stat__label">Years Exp.</span>
+          </div>
+          <div class="master-stat">
+            <span class="master-stat__value">⭐ {{ request.user.profile.rating }}</span>
+            <span class="master-stat__label">Rating</span>
+          </div>
+          <div class="master-stat">
+            <span class="master-stat__value">{{ my_services|length }}</span>
+            <span class="master-stat__label">Services</span>
+          </div>
+        </div>
+
+        {% if request.user.profile.bio %}
+        <div class="master-bio">
+          <p class="master-bio__label">About Me</p>
+          <p class="master-bio__text">{{ request.user.profile.bio }}</p>
+        </div>
         {% endif %}
 
-    </div>
+        <div class="services-header">
+          <h3 class="services-header__title">My Active Services</h3>
+          <a href="{% url 'create_services' %}" class="services-header__add">+ New Service</a>
+        </div>
 
+        <div class="services-list">
+          {% for service in my_services %}
+            <div class="service-card">
+              <div class="service-card__info">
+                <h4 class="service-card__title">{{ service.title }}</h4>
+                <span class="service-card__price">{{ service.price }} TJS</span>
+              </div>
+              {% if service.master == request.user %}
+              <div class="service-card__actions">
+                <a href="{% url 'update_service' service.id %}" class="service-action service-action--edit">Edit 📝</a>
+                <a href="{% url 'delete_service' service.id %}"
+                   onclick="return confirm('Оё шумо дар ҳақиқат мехоҳед ин хизматрасониро нест кунед?');"
+                   class="service-action service-action--delete">Delete ❌</a>
+                <a href="{% url 'toggle_service_status' service.pk %}"
+                   class="service-action {% if service.is_active %}service-action--hide{% else %}service-action--activate{% endif %}">
+                  {% if service.is_active %}Пинҳон 👁️‍🗨️{% else %}Фаъол ✅{% endif %}
+                </a>
+              </div>
+              {% endif %}
+            </div>
+          {% empty %}
+            <div class="services-empty">
+              <span class="services-empty__icon">🛠️</span>
+              <p class="services-empty__text">You haven't added any services yet.</p>
+              <a href="{% url 'create_services' %}" class="services-header__add">Add your first service</a>
+            </div>
+          {% endfor %}
+        </div>
+
+      {% else %}
+
+        <div class="client-orders-empty">
+          <span class="client-orders-empty__icon">📦</span>
+          <h3 class="client-orders-empty__title">My Orders</h3>
+          <p class="client-orders-empty__text">You are logged in as a Client. Your order history will appear here.</p>
+        </div>
+
+      {% endif %}
+
+    </main>
+
+  </div>
 </div>
 
 {% endblock %}
