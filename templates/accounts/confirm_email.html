@@ -1,20 +1,49 @@
- {% extends "accounts/base.html" %}
+{% extends "accounts/base.html" %}
 {% block main %}
 
- <h3> Confirm Email </h3>
-    <form action=" {% url 'confirm' %}" method="post">
-        {% csrf_token %}
-        <label for="username">Username</label> <br>
-        <input value="{{ username }}" type="text" placeholder="enter ur username" name="username" required> <br> <br>
+<div class="form-wrapper">
+    <div class="form-container auth-box-width">
         
-        <label for="code">Code</label> <br>
-        <input type="text" placeholder="Enter 6-digit code " name="code" required> <br> <br>
-        <button type="submit"> Confimr</button>
+        <div class="form-header">
+            <div class="header-icon-glow">✉️</div>
+            <h2 class="form-title">Тасдиқи почта</h2>
+            <p class="form-subtitle">Коди 6-рақамаи ба почтаатон фиристодашударо ворид кунед</p>
+        </div>
+
         {% if error %}
-            <p style="color: red;">{{error}}</p>
+            <div class="error-alert">
+                <span class="error-icon">⚠️</span>
+                <span class="error-text">{{ error }}</span>
+            </div>
         {% endif %}
-    </form>
-    <div>
-        <p><strong>Do u already have an account so </strong> <a href="{% url  'login'  %}">Sign in</a></p>
+
+        <form action="{% url 'confirm' %}" method="post" class="form-grid">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label class="form-group-label" for="username">Номи корбарӣ (Username)</label>
+                <input value="{{ username }}" type="text" placeholder="Username-ро ворид кунед" name="username" id="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-group-label" for="code">Коди тасдиқ (6-digit code)</label>
+                <div class="verification-code-wrapper">
+                    <input type="text" placeholder="000000" name="code" id="code" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" style="text-align: center; letter-spacing: 6px; font-size: 20px; font-weight: bold;" required>
+                </div>
+            </div>
+
+            <div class="action-buttons-wrapper">
+                <button type="submit" class="btn-submit">
+                    <span class="btn-text">Тасдиқ кардан ✨</span>
+                </button>
+            </div>
+        </form>
+
+        <div class="auth-footer-zone">
+            <p class="auth-footer-text">Аллакай аккаунт доред? <a href="{% url 'login' %}" class="auth-footer-link">Вуруд (Sign in)</a></p>
+        </div>
+
     </div>
-{% endblock  %}
+</div>
+
+{% endblock %}
