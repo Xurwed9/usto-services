@@ -1,25 +1,80 @@
 {% extends "accounts/base.html" %}
 {% block main %}
 
- <h3> Login </h3>
-    <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        <label for="username">Username</label> <br>
-        <input type="text" placeholder="enter ur username" name="username" value="{{ last_username }}" required> <br> <br>
+<div class="form-wrapper">
+    <div class="form-container auth-box-width">
         
-        <label for="password">password</label> <br>
-        <input type="password" placeholder="enter ur password" name="password" required> <br> <br>
-      
-        <button type="submit"> Login</button>
+        <div class="form-header">
+            <div class="header-icon-glow">🔐</div>
+            <h2 class="form-title">Вуруд ба система</h2>
+            <p class="form-subtitle">Барои давом додан маълумоти худро ворид кунед</p>
+        </div>
+
         {% if error %}
-            <p style="color: red;">{{error}}</p>
+            <div class="error-alert">
+                <span class="error-icon">⚠️</span>
+                <span class="error-text">{{ error }}</span>
+            </div>
         {% endif %}
-    </form>
-    <div>
-        <p><strong>Dont an account so </strong> <a href="{% url 'register' %}">Sign Up</a></p>
-        <p><strong>YOu can confirm ur email here </strong> <a href="{% url 'confirm' %}">Confirm</a></p>
-        <a href="{% url 'forgot_password' %}" style="color: #3182ce; text-decoration: none; font-size: 14px;">
-            Паролро фаромӯш кардам? 🔒
-        </a>
+
+        <form action="{% url 'login' %}" method="post" class="form-grid">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label class="form-group-label" for="username">Номи корбарӣ (Username)</label>
+                <input type="text" placeholder="Username-ро ворид кунед" name="username" id="username" value="{{ last_username|default:'' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <label class="form-group-label" for="password" style="margin-bottom: 0;">Парол (Password)</label>
+                    <a href="{% url 'forgot_password' %}" class="auth-helper-link">
+                        Паролро фаромӯш кардед? 🔒
+                    </a>
+                </div>
+                
+                <div class="password-input-wrapper">
+                    <input type="password" placeholder="Пароли худро ворид кунед" name="password" id="password" required>
+                    <button type="button" id="togglePassword" class="password-toggle-btn">
+                        <i id="eyeIcon" class="fa-solid fa-eye-slash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="action-buttons-wrapper" style="margin-top: 10px;">
+                <button type="submit" class="btn-submit">
+                    <span class="btn-text">Вуруд 🚀</span>
+                </button>
+            </div>
+        </form>
+
+        <div class="auth-footer-zone">
+            <p class="auth-footer-text">
+                Аккаунт надоред? <a href="{% url 'register' %}" class="auth-footer-link">Сабти ном (Sign Up)</a>
+            </p>
+            <p class="auth-footer-text" style="margin-top: 10px; font-size: 13px;">
+                Коди тасдиқ омад? <a href="{% url 'confirm' %}" class="auth-footer-link" style="color: #10b981;">Тасдиқи почта</a>
+            </p>
+        </div>
+
     </div>
+</div>
+
+<script>
+    const passwordInput = document.getElementById('password');
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    togglePasswordBtn.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        if (type === 'password') {
+            eyeIcon.className = 'fa-solid fa-eye-slash';
+        } else {
+            eyeIcon.className = 'fa-solid fa-eye';
+        }
+    });
+</script>
+
 {% endblock %}

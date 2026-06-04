@@ -4232,3 +4232,79 @@ body {
         padding: 16px;
     }
 }
+
+
+
+/* login */
+.auth-helper-link {
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.auth-helper-link:hover {
+    color: #3b82f6;
+    text-decoration: underline;
+}
+
+.auth-footer-zone {
+    margin-top: 30px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 20px;
+}
+
+.auth-footer-text {
+    color: #9ca3af;
+    font-size: 14px;
+    margin: 0;
+}
+
+.auth-footer-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s ease;
+}
+
+.auth-footer-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.auth-box-width {
+    max-width: 450px !important;
+}
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+    padding-right: 45px !important; 
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    background: none !important;
+    border: none !important;
+    color: #9ca3af !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    font-size: 18px;
+    user-select: none;
+    z-index: 10;
+}
+
+.password-toggle-btn:hover {
+    color: #ffffff !important;
+}
