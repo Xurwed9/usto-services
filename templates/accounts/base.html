@@ -1,147 +1,123 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TajService</title>
-    
-    <style>
-        nav {
-            display: flex;
-            align-items: center;
-            background-color: #f8f9fa;
-            padding: 10px 20px;
-            gap: 15px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #333;
-            font-size: 16px;
-        }
-
-        /* Контейнери асосии менюи афтанда */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        /* Тугмае, ки болош курсорро мебарем */
-        .dropbtn {
-            background: none;
-            border: none;
-            color: #333;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 10px 0; /* Каме падинг додем, то бурдани курсор осон шавад */
-        }
-
-        /* Рӯйхати пинҳонӣ (автоматӣ пинҳон аст) */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #ffffff;
-            min-width: 180px; /* Каме васеътар кардем, то текстҳо сиб нашаванд */
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
-            z-index: 100; /* Сатҳро баланд кардем, то аз болои дигар блокҳо гузарад */
-            border-radius: 4px;
-            margin-top: 0px;
-        }
-
-        /* Ссылкаҳои дохили рӯйхати афтанда */
-        .dropdown-content a {
-            color: #333;
-            padding: 12px 15px;
-            text-decoration: none;
-            display: block;
-        }
-
-        /* Ранги ссылкаҳо вақте курсор болошон меравад */
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        /* Вақте курсор болои .dropdown меравад, рӯйхатро нишон деҳ */
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
- <header>
-    <nav style="display: flex; align-items: center; gap: 20px; padding: 10px 20px; background: #fff; border-bottom: 1px solid #ddd;">
-        <a href="/" style="font-weight: bold; text-decoration: none; color: #333; font-size: 20px;">TajService</a>
 
-        <button id="openAiBtn" style="background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 2px 4px rgba(37,99,235,0.2);">
-            <span>🤖</span> Аз AI пурсидан
+<header class="site-header">
+    <nav class="nav">
+
+        <a href="/" class="nav__logo">TajService</a>
+
+        <button class="nav__ai-btn" id="openAiBtn">
+            <span class="nav__ai-btn-icon">✦</span>
+            Аз AI пурсидан
         </button>
 
-        <div style="margin-left: auto; display: flex; gap: 15px; align-items: center;">
+        <div class="nav__links">
             {% if request.user.is_authenticated %}
+
                 <div class="dropdown">
-                    <button class="dropbtn">Categories ▼</button>
-                    <div class="dropdown-content">
+                    <button class="dropdown__trigger">
+                        Категорияҳо
+                        <span class="dropdown__arrow">↓</span>
+                    </button>
+                    <div class="dropdown__menu">
                         {% for cat in categories %}
-                            <a href="/services/category/{{ cat.slug }}/">{{ cat.name }}</a>
+                            <a href="/services/category/{{ cat.slug }}/" class="dropdown__item">{{ cat.name }}</a>
                         {% empty %}
-                            <a href="#">No categories</a>
+                            <a href="#" class="dropdown__item dropdown__item--empty">Категория нест</a>
                         {% endfor %}
                     </div>
                 </div>
-                
-                <a href="{% url 'my_orders' %}">my orders</a>
-                
+
+                <a href="{% url 'my_orders' %}" class="nav__link">Фармоишҳои ман</a>
+
                 {% if request.user.role == 'master' %}
-                    <a href="{% url 'create_services' %}" style="color: #28a745; font-weight: bold; text-decoration: none;">+ Иловаи хизматрасонӣ</a>
+                    <a href="{% url 'create_services' %}" class="nav__link nav__link--add">
+                        <span>+</span> Иловаи хизмат
+                    </a>
                 {% endif %}
 
-                <a href="{% url 'profile' %}" style="text-decoration: none; color: #007bff; font-weight: bold;">Profile ({{ request.user.username }})</a>
-                <a href="{% url 'logout' %}" style="text-decoration: none; color: #dc3545;">logout</a>
-                
+                <a href="{% url 'profile' %}" class="nav__profile">
+                    <span class="nav__profile-avatar">{{ request.user.username|first|upper }}</span>
+                    {{ request.user.username }}
+                </a>
+
+                <a href="{% url 'logout' %}" class="nav__link nav__link--logout">Баромадан</a>
+
             {% else %}
-                <a href="{% url 'register' %}" style="text-decoration: none; color: #333;">register</a>
-                <a href="{% url 'login' %}" style="text-decoration: none; color: #333;">login</a>
+                <a href="{% url 'register' %}" class="nav__link">Сабт</a>
+                <a href="{% url 'login' %}" class="btn btn--primary btn--sm">Вуруд</a>
             {% endif %}
         </div>
 
-        <form action="{% url 'service_search' %}" method="GET" style="margin: 0;">
-            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="search">
-            <button type="submit">Search</button>
+        <form action="{% url 'service_search' %}" method="GET" class="nav__search">
+            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Ҷустуҷӯ..." class="nav__search-input" aria-label="Search">
+            <button type="submit" class="nav__search-btn" aria-label="Search submit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+            </button>
         </form>
+
+        <button class="nav__hamburger" id="navHamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+
     </nav>
 
     {% if query %}
-        <p style="text-align: center; color: #4a5568; margin-top: 10px;">
-            Натиҷаи ҷустуҷӯ барои: <strong>"{{ query }}"</strong> ({{ services.count }} эълон ёфт шуд)
-        </p>
+    <div class="search-result-bar">
+        Натиҷа барои: <strong>"{{ query }}"</strong> — {{ services.count }} эълон ёфт шуд
+    </div>
     {% endif %}
 
-    <div id="aiChatBox" style="display: none; background: #ffffff; padding: 20px; border-radius: 16px; margin: 15px auto; max-width: 600px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); position: relative; animation: slideDown 0.3s ease;">
-        
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="color: #1e3a8a; margin: 0; display: flex; align-items: center; gap: 8px;">🚀 TajService AI Chat</h3>
-            <button id="closeAiBtn" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #94a3b8;">&times;</button>
+    <div class="ai-chat" id="aiChatBox">
+        <div class="ai-chat__header">
+            <div class="ai-chat__title">
+                <span class="ai-chat__title-dot"></span>
+                TajService AI
+            </div>
+            <button class="ai-chat__close" id="closeAiBtn" aria-label="Close AI chat">✕</button>
         </div>
 
-        <div id="chatWindow" style="max-height: 250px; overflow-y: auto; padding: 10px; background: #f8fafc; border-radius: 10px; margin-bottom: 15px; border: 1px solid #f1f5f9;">
-            <p style="margin: 5px 0; color: #64748b; font-size: 14px; text-align: center;">Салом! Ман ёварӣ интеллектуалӣ. Чӣ кӯмак кунам? 😊</p>
+        <div class="ai-chat__window" id="chatWindow">
+            <div class="ai-chat__welcome">
+                Салом! Ман ёварии ҳушманди TajService ҳастам. Чӣ кӯмак карда метавонам? ✦
+            </div>
         </div>
-        
-        <div style="display: flex; gap: 10px;">
-            <input type="text" id="aiInput" placeholder="Саволи худро нависед..." style="flex-grow: 1; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e0; font-size: 14px; outline: none;">
-            <button id="sendAiBtn" style="background: #2563eb; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; cursor: pointer;">Фиристодан</button>
+
+        <div class="ai-chat__input-row">
+            <input type="text" id="aiInput" placeholder="Савол нависед..." class="ai-chat__input" aria-label="AI question input">
+            <button id="sendAiBtn" class="ai-chat__send-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="m22 2-7 20-4-9-9-4 20-7z"/>
+                </svg>
+            </button>
         </div>
     </div>
 </header>
 
-<style>
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .user-msg { background: #e0f2fe; color: #0369a1; padding: 8px 12px; border-radius: 12px; margin: 8px 0 8px auto; max-width: 80%; text-align: right; }
-    .ai-msg { background: #f1f5f9; color: #334155; padding: 8px 12px; border-radius: 12px; margin: 8px auto 8px 0; max-width: 80%; line-height: 1.5; white-space: pre-line; }
-</style>
+{% block main %}
+<h2>block main</h2>
+{% endblock %}
+
+<footer class="site-footer">
+    <div class="site-footer__inner">
+        <span class="site-footer__brand">TajService</span>
+        <span class="site-footer__copy">© 2025 Ҳамаи ҳуқуқҳо ҳифз шудаанд</span>
+    </div>
+</footer>
 
 <script>
     const openBtn = document.getElementById('openAiBtn');
@@ -151,43 +127,44 @@
     const aiInput = document.getElementById('aiInput');
     const chatWindow = document.getElementById('chatWindow');
 
-    openBtn.onclick = () => { chatBox.style.display = chatBox.style.display === 'none' ? 'block' : 'none'; };
-    closeBtn.onclick = () => { chatBox.style.display = 'none'; };
+    openBtn.onclick = () => {
+        chatBox.classList.toggle('ai-chat--open');
+        if (chatBox.classList.contains('ai-chat--open')) aiInput.focus();
+    };
+    closeBtn.onclick = () => chatBox.classList.remove('ai-chat--open');
 
     async function sendQuestion() {
         const text = aiInput.value.trim();
         if (!text) return;
 
-        chatWindow.innerHTML += `<div class="user-msg"><b>Шумо:</b> ${text}</div>`;
+        chatWindow.innerHTML += `<div class="ai-chat__msg ai-chat__msg--user">${text}</div>`;
         aiInput.value = '';
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         const loadingId = 'loading-' + Date.now();
-        chatWindow.innerHTML += `<div class="ai-msg" id="${loadingId}">🤔 AI дар ҳоли фикр кардан...</div>`;
+        chatWindow.innerHTML += `<div class="ai-chat__msg ai-chat__msg--ai" id="${loadingId}"><span class="ai-chat__typing"><span></span><span></span><span></span></span></div>`;
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         try {
-            const response = await fetch(`{% url 'ai_help' %}?promt=${encodeURIComponent(text)}`, {                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            const response = await fetch(`{% url 'ai_help' %}?promt=${encodeURIComponent(text)}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
             const data = await response.json();
-            
-            document.getElementById(loadingId).innerHTML = `<b>🤖 AI:</b> ${data.ai_answer}`;
+            document.getElementById(loadingId).innerHTML = data.ai_answer;
         } catch (error) {
-            document.getElementById(loadingId).innerText = '⚠️ Хатогӣ дар пайвастшавӣ.';
+            document.getElementById(loadingId).textContent = '⚠️ Хатогӣ дар пайвастшавӣ.';
         }
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
     sendBtn.onclick = sendQuestion;
-    aiInput.onkeypress = (e) => { if(e.key === 'Enter') sendQuestion(); };
+    aiInput.onkeypress = (e) => { if (e.key === 'Enter') sendQuestion(); };
+
+    document.getElementById('navHamburger').onclick = function() {
+        document.querySelector('.nav__links').classList.toggle('nav__links--open');
+        this.classList.toggle('nav__hamburger--open');
+    };
 </script>
 
-    {% block main %}
-        <h2>block main</h2>
-    {% endblock %}
-
-    <footer>
-        <h2 style="text-align: center; margin-top: 5px;">footer</h2>
-    </footer>
 </body>
 </html>

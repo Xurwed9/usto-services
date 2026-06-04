@@ -5,6 +5,10 @@ from django.db.models import Q, Avg
 from groq import Groq
 from django.conf import settings
 from django.http import JsonResponse
+from django.http import HttpResponseForbidden
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your views here.
 
@@ -322,3 +326,22 @@ def ai_help(request):
         'ai_answer': ai_answer,
         'user_prompt': prompt
     })
+
+
+
+
+@login_required
+def admin_dashboard(request):
+    if not request.user.is_superuser and not request.user.is_staff:
+        return HttpResponseForbidden("Шумо ҳуқуқи даромадан ба ин саҳифаро надоред!")
+        
+    total_services = Service.objects.count()
+    total_users = User.objects.count()
+    recent_services = Service.objects.order_by('-id')[:10]
+    
+    context = {
+        'total_services': total_services,
+        'total_users': total_users,
+        'recent_services': recent_services,
+    }
+    return render(request, 'services/admin_dashboard.html', context)
