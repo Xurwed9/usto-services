@@ -4308,3 +4308,66 @@ body {
 .password-toggle-btn:hover {
     color: #ffffff !important;
 }
+
+
+
+
+
+/* register */
+.radio-group-wrapper {
+    display: flex;
+    gap: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.radio-custom-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.radio-custom-label input[type="radio"] {
+    display: none;
+}
+
+.radio-box {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.radio-custom-label input[type="radio"]:checked + .radio-box {
+    border-color: #3b82f6;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+}
+
+.radio-custom-label input[type="radio"]:checked + .radio-box::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #3b82f6;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.radio-text {
+    color: #9ca3af;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.radio-custom-label input[type="radio"]:checked ~ .radio-text {
+    color: #ffffff;
+}

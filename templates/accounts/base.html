@@ -99,7 +99,7 @@
         <span class="site-footer__copy">© 2026 Ҳамаи ҳуқуқҳо ҳифз шудаанд</span>
     </div>
 </footer>
-
+            {% if request.user.is_authenticated %}
 <div class="ai-chat" id="aiChatBox">
     <div class="ai-chat__header">
         <div class="ai-chat__title">
@@ -124,6 +124,7 @@
         </button>
     </div>
 </div>
+{% endif %}
 
 <script>
     const openBtn = document.getElementById('openAiBtn');

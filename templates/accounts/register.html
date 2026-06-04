@@ -1,34 +1,114 @@
- {% extends "accounts/base.html" %}
+{% extends "accounts/base.html" %}
 {% block main %}
 
- <h3> Register </h3>
-    <form action="" method="post">
-        {% csrf_token %}
-        <label for="username">Username</label> <br>
-        <input type="text" placeholder="enter ur username" name="username" required> <br> <br>
-        <label for="email">Email</label> <br>
-        <input type="email" placeholder="enter ur email" name="email" required> <br> <br>
-        <label for="password1">password</label> <br>
-        <input type="password" placeholder="enter ur password" name="password1" required> <br> <br>
-        <label for="password2">Confirm password</label> <br>
-        <input type="password" placeholder="confirm password" name="password2" required> <br> <br>
-        <label for="phone">Enter ur phone</label> <br>
-        <input type="text" placeholder="enter ur phone" name="phone" required> <br> <br>
-        <label style="font-weight: bold; display: block; margin-bottom: 5px;">Шумо кистед?</label>
-    
-        <input type="radio" id="client" name="role" value="client" checked>
-        <label for="client" style="margin-right: 15px;">Мизоҷ (User)</label>
-    
-        <input type="radio" id="master" name="role" value="master">
-        <label for="master">Усто (Master)</label>
-       
-        <button type="submit"> Register</button>
+<div class="form-wrapper">
+    <div class="form-container auth-box-width">
+        
+        <div class="form-header">
+            <div class="header-icon-glow">📝</div>
+            <h2 class="form-title">Сабти ном</h2>
+            <p class="form-subtitle">Барои сохтани аккаунт маълумотро ворид кунед</p>
+        </div>
+
         {% if error %}
-            <p style="color: red;">{{error}}</p>
+            <div class="error-alert">
+                <span class="error-icon">⚠️</span>
+                <span class="error-text">{{ error }}</span>
+            </div>
         {% endif %}
-    </form>
-    <div>
-        <p><strong>Do u already have an account so </strong> <a href="{% url  'login'  %}">Sign in</a></p>
-        <p><strong>YOu can confirm ur email here </strong> <a href="{% url  'confirm'  %}">Confirm</a></p>
+
+        <form action="" method="post" class="form-grid">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label class="form-group-label" for="username">Номи корбарӣ (Username)</label>
+                <input type="text" placeholder="Username-ро ворид кунед" name="username" id="username" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-group-label" for="email">Почтаи электронӣ (Email)</label>
+                <input type="email" placeholder="Намуна: example@mail.com" name="email" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-group-label" for="password1">Парол (Password)</label>
+                <div class="password-input-wrapper">
+                    <input type="password" placeholder="Паролро созед" name="password1" id="password1" required>
+                    <button type="button" class="password-toggle-btn" data-target="password1">
+                        <i class="fa-solid fa-eye-slash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-group-label" for="password2">Тасдиқи парол (Confirm Password)</label>
+                <div class="password-input-wrapper">
+                    <input type="password" placeholder="Паролро такрор кунед" name="password2" id="password2" required>
+                    <button type="button" class="password-toggle-btn" data-target="password2">
+                        <i class="fa-solid fa-eye-slash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-group-label" for="phone">Рақами телефон</label>
+                <input type="text" placeholder="Намуна: +992 900 00 0000" name="phone" id="phone" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-group-label" style="margin-bottom: 12px;">Шумо кистед?</label>
+                <div class="radio-group-wrapper">
+                    
+                    <label class="radio-custom-label" for="client">
+                        <input type="radio" id="client" name="role" value="client" checked>
+                        <span class="radio-box"></span>
+                        <span class="radio-text">🙋‍♂️ Мизоҷ (User)</span>
+                    </label>
+                
+                    <label class="radio-custom-label" for="master">
+                        <input type="radio" id="master" name="role" value="master">
+                        <span class="radio-box"></span>
+                        <span class="radio-text">🛠️ Усто (Master)</span>
+                    </label>
+                    
+                </div>
+            </div>
+
+            <div class="action-buttons-wrapper" style="margin-top: 10px;">
+                <button type="submit" class="btn-submit">
+                    <span class="btn-text">Рӯйхатгирӣ 🚀</span>
+                </button>
+            </div>
+        </form>
+
+        <div class="auth-footer-zone">
+            <p class="auth-footer-text">
+                Аллакай аккаунт доред? <a href="{% url 'login' %}" class="auth-footer-link">Вуруд (Sign In)</a>
+            </p>
+            <p class="auth-footer-text" style="margin-top: 10px; font-size: 13px;">
+                Коди тасдиқро ворид кардан? <a href="{% url 'confirm' %}" class="auth-footer-link" style="color: #10b981;">Тасдиқи почта</a>
+            </p>
+        </div>
+
     </div>
-{% endblock  %}
+</div>
+
+<script>
+    document.querySelectorAll('.password-toggle-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const inputId = this.getAttribute('data-target');
+            const inputField = document.getElementById(inputId);
+            const icon = this.querySelector('i');
+            
+            if (inputField.type === 'password') {
+                inputField.type = 'text';
+                icon.className = 'fa-solid fa-eye';
+            } else {
+                inputField.type = 'password';
+                icon.className = 'fa-solid fa-eye-slash';
+            }
+        });
+    });
+</script>
+
+{% endblock %}
