@@ -1,4 +1,5 @@
 {% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
 <html lang="tg">
 <head>
@@ -24,8 +25,7 @@
 
         <button class="nav__ai-btn" id="openAiBtn">
             <span class="nav__ai-btn-icon">✦</span>
-            Аз AI пурсидан
-        </button>
+            {% trans "Аз AI пурсидан" %}        </button>
 
         <div class="nav__links">
             {% if request.user.is_authenticated %}
@@ -37,7 +37,7 @@
 
                 <div class="dropdown">
                     <button class="dropdown__trigger">
-                        Категорияҳо
+                        {% trans "Категорияҳо" %}
                         <span class="dropdown__arrow">↓</span>
                     </button>
                     <div class="dropdown__menu">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
 
-                <a href="{% url 'my_orders' %}" class="nav__link">Фармоишҳои ман</a>
+                <a href="{% url 'my_orders' %}" class="nav__link">{% trans "Фармоишҳои ман" %}</a>
 
                 {% if request.user.role == 'master' %}
                     <a href="{% url 'create_services' %}" class="nav__link nav__link--add">
@@ -62,11 +62,11 @@
                     {{ request.user.username }}
                 </a>
 
-                <a href="{% url 'logout' %}" class="nav__link nav__link--logout">Баромадан</a>
+                <a href="{% url 'logout' %}" class="nav__link nav__link--logout">{% trans "Баромадан" %}</a>
 
             {% else %}
-                <a href="{% url 'register' %}" class="nav__link">Сабт</a>
-                <a href="{% url 'login' %}" class="btn btn--primary btn--sm">Вуруд</a>
+                <a href="{% url 'register' %}" class="nav__link">{% trans "Сабт" %}</a>
+                <a href="{% url 'login' %}" class="btn btn--primary btn--sm">{% trans "Вуруд" %}</a>
             {% endif %}
         </div>
 

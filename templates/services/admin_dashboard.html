@@ -35,7 +35,14 @@
                     <td class="cell-category">{{ service.category.name }}</td>
                     <td><span class="cell-user">{{ service.user.username }}</span></td>
                     <td>
-                        <a href="#" class="btn-delete">Нест кардан</a>
+                        <td>
+    <form action="{% url 'delete_service' service.id %}" method="POST" onsubmit="return confirm('Шумо боварӣ доред?');">
+        {% csrf_token %}
+        <button type="submit" class="btn-delete" style="background: none; border: none; color: red; cursor: pointer;">
+            Нест кардан
+        </button>
+    </form>
+</td>
                     </td>
                 </tr>
                 {% empty %}

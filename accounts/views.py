@@ -55,7 +55,6 @@ def register(request):
             return render(request, 'accounts/register.html', {'error': 'Phone already exists'})
         user = User.objects.create_user(username=username, email=email,
                                         password=password1, phone=phone,role=user_role)
-        Profile.objects.create(user=user)
         user.is_active=False
         user.save()
         send_confirmation_email(user)

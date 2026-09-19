@@ -21,4 +21,5 @@ urlpatterns = [
     path('ai-assistant/', views.ai_help, name='ai_help'),
 
     path('dashboard/admin/', views.admin_dashboard, name='admin_dashboard'),
+    path('delete/<int:service_id>/', views.delete_service, name='delete_service'),
 ]

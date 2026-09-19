@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import environ
-from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -47,17 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
-LANGUAGE_CODE = 'tg'
-
-LANGUAGES = [
-    ('tg', _('Tajik')),
-    ('ru', _('Russian')),
-    ('en', _('English')),
-]
-
-LOCALE_PATHS = [
-    BASE_DIR / 'locale',
 ]
 
 MIDDLEWARE = [
@@ -157,8 +145,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'iskandarovhursed85@gmail.com'
-EMAIL_HOST_PASSWORD = 'tcwy qvnd dqph hckk'
+EMAIL_HOST_USER = 'xonixj9@gmail.com'
+EMAIL_HOST_PASSWORD = 'bvim hzih aedp euyz'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 GROQ_API_KEY = env('GROQ_API_KEY', default='')
+# bvim hzih aedp euyz

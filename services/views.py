@@ -7,6 +7,7 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.http import HttpResponseForbidden
 from django.contrib.auth import get_user_model
+from django.contrib.admin.views.decorators import staff_member_required
 
 User = get_user_model()
 
@@ -345,3 +346,12 @@ def admin_dashboard(request):
         'recent_services': recent_services,
     }
     return render(request, 'services/admin_dashboard.html', context)
+
+
+
+@staff_member_required 
+def delete_service(request, service_id):
+    if request.method == 'POST':
+        service = get_object_or_404(Service, id=service_id)
+        service.delete()
+    return redirect('admin_dashboard')
